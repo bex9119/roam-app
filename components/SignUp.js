@@ -11,11 +11,15 @@ export default function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
+    //model under construction
+    //const [modalVisible, setModalVisible] = useState(false);
+
+    // const toggleModal = () => {
+    //     setModalVisible(!isModalVisible);
+    // };
 
     function handleSubmit() {
         setButtonDisabled(true);
-        setModalVisible(true);
 
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -35,6 +39,7 @@ export default function SignUp() {
                             "User document written with ID: ",
                             docRef.id
                         );
+                        setModalVisible(true);
                         // Now you can navigate to the home page or perform other actions
                     })
                     .catch((error) => {
@@ -47,21 +52,21 @@ export default function SignUp() {
             });
     }
 
-    if (modalVisible) {
-        return (
-            <View style={styles.centeredView}>
-                <Modal visible={modalVisible} animationType="fade">
-                    <View style={styles.centeredView}>
-                        <Text>All signed up!</Text>
-                        <Button
-                            title="OK"
-                            onPress={setModalVisible(false)}
-                        ></Button>
-                    </View>
-                </Modal>
-            </View>
-        );
-    }
+    // if (modalVisible) {
+    //     return (
+    //         <View style={styles.centeredView}>
+    //             <Modal visible={modalVisible}>
+    //                 <View style={styles.centeredView}>
+    //                     <Text>All signed up!</Text>
+    //                     <Button
+    //                         title="OK"
+    //                         onPress={setModalVisible(false)}
+    //                     ></Button>
+    //                 </View>
+    //             </Modal>
+    //         </View>
+    //     );
+    // }
 
     return (
         <>
