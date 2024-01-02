@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import MapView, { Polyline, Polygon } from "./utils/map";
+import MapView, { Polyline, Polygon } from "../utils/map";
 import * as Location from "expo-location";
-import createGrid from "./utils";
-import mapStyle from "./mapStyle.json";
+import createGrid from "../utils/utils";
 
-export default function App() {
+export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
@@ -65,7 +64,6 @@ export default function App() {
       }}
       provider="google"
       googleMapsApiKey="AIzaSyACpE25lUWPIXj6LiDd52Wafj0OWIxYrGA"
-      customMapStyle={mapStyle}
     >
       {region.map((tile, index) => {
         return (
