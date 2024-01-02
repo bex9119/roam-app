@@ -3,8 +3,8 @@ const createGrid = () => {
   let longGrid = [];
   let grid = [];
   let tiles = [];
-  const longitudeInterval = 0.0025;
-  const latitudeInterval = 0.0015;
+  const longitudeInterval = 0.005;
+  const latitudeInterval = 0.003;
 
   while (longitude < -1.4 && longitude > -2) {
     longGrid.push(longitude);
