@@ -63,7 +63,7 @@ export default function MapScreen() {
         longitudeDelta: 0.04,
       }}
       provider="google"
-      googleMapsApiKey= "AIzaSyACpE25lUWPIXj6LiDd52Wafj0OWIxYrGAw"
+      googleMapsApiKey="AIzaSyBdvF-tHDZd-CAjetSae6Eut8VL_xrgpMw"
     >
       {region.map((tile, index) => {
         return (
