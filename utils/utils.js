@@ -1,18 +1,21 @@
 const createGrid = () => {
-  let longitude = -1.6;
+  let longitude = -1.7;
   let longGrid = [];
   let grid = [];
   let tiles = [];
+  const longitudeInterval = 0.0025;
+  const latitudeInterval = 0.0015;
+
   while (longitude < -1.4 && longitude > -2) {
     longGrid.push(longitude);
-    longitude += 0.01;
+    longitude += longitudeInterval;
   }
   longGrid.forEach((long) => {
-    let latitude = 53.78;
+    let latitude = 53.72;
     while (latitude >= 53.7 && latitude < 53.9) {
       let square = { longitude: long, latitude: null };
       square.latitude = latitude;
-      latitude += 0.01;
+      latitude += latitudeInterval;
       grid.push(square);
     }
   });
@@ -25,20 +28,20 @@ const createGrid = () => {
         },
         {
           latitude: latLong.latitude,
-          longitude: latLong.longitude + 0.01,
+          longitude: latLong.longitude + longitudeInterval,
         },
         {
-          latitude: latLong.latitude + 0.01,
-          longitude: latLong.longitude + 0.01,
+          latitude: latLong.latitude + latitudeInterval,
+          longitude: latLong.longitude + longitudeInterval,
         },
         {
-          latitude: latLong.latitude + 0.01,
+          latitude: latLong.latitude + latitudeInterval,
           longitude: latLong.longitude,
         },
       ],
       fill: true,
-      sortLat: [latLong.latitude, latLong.latitude + 0.01],
-      sortLong: [latLong.longitude, latLong.longitude + 0.01],
+      sortLat: [latLong.latitude, latLong.latitude + latitudeInterval],
+      sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
     });
   });
   return tiles;

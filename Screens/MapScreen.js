@@ -55,6 +55,8 @@ export default function MapScreen() {
 
   return (
     <MapView
+      minZoomLevel={12}
+      maxZoomLevel={20}
       style={{ flex: 1 }}
       initialRegion={{
         latitude: 53.8,
@@ -71,6 +73,7 @@ export default function MapScreen() {
             key={`tile${index}`}
             coordinates={tile.location}
             fillColor={tile.fill ? "rgba(0,0,0,1)" : "rgba(0,0,0,0)"}
+            strokeColor="rgba(0,0,0,0)"
           />
         );
       })}
