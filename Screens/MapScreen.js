@@ -16,7 +16,7 @@ export default function MapScreen() {
           return "error";
         }
         return Location.watchPositionAsync(
-          { accuracy: Location.Accuracy.High, timeInterval: 5000 },
+          { accuracy: Location.Accuracy.Highest, timeInterval: 5000 },
           (location) => {
             const newCoordinates = {
               latitude: location.coords.latitude,
@@ -63,7 +63,7 @@ export default function MapScreen() {
         longitudeDelta: 0.04,
       }}
       provider="google"
-      googleMapsApiKey="AIzaSyACpE25lUWPIXj6LiDd52Wafj0OWIxYrGA"
+      googleMapsApiKey= "AIzaSyACpE25lUWPIXj6LiDd52Wafj0OWIxYrGAw"
     >
       {region.map((tile, index) => {
         return (
