@@ -1,25 +1,48 @@
-// import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Camera, CameraType } from "expo-camera";
+import { Button, Image, StyleSheet, Text, View } from "react-native-web";
 
-// Camera
+export default function CameraScreen() {
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [camera, setCamera] = useState(false);
+  const [image, setImage] = useState(null);
 
+  const takePicture = async () => {
+    console.log("picture taken");
+    if (camera) {
+      const data = await camera.takePictureAsync(null);
+      setImage(data.uri);
+    }
+  };
 
+  if (permission === false) {
+    return <Text>No access to camera</Text>;
+  } else {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={styles.cameraContainer}>
+          <Camera
+            ref={(ref) => setCamera(ref)}
+            style={styles.fixedRatio}
+            // type={type}
+            ratio={"1:1"}
+          />
+        </View>
+        <Button title="Take Picture" onPress={() => takePicture()} />
+        {console.log(image)}
+        {image && <Image source={{ uri: image }} style={{ flex: 1 }} />}
+      </View>
+    );
+  }
+}
 
-
-// export default function CameraView() {
-
-//     const [startCamera, setStartCamera] = useState(false)
-    
-    
-//     function toggleCameraType() {
-//         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-//     }
-
-//     const [type, setType] = useState(CameraType.back)
-//     const [permission, setPermission] = Camera.useCameraPermissions();
-
-
-    
-
-
-
-// }
+const styles = StyleSheet.create({
+  cameraContainer: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  fixedRatio: {
+    flex: 1,
+    aspectRatio: 1,
+  },
+});
