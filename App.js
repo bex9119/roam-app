@@ -9,6 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Routes from "./components/Routes";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MapScreen from "./Screens/MapScreen";
 
 //const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -19,7 +20,7 @@ export default function App() {
             <Tab.Navigator>
                     <Tab.Screen name="Login" component={LoginPage}/>
                     <Tab.Screen name="Sign-up" component={SignUp}/>
-                    {/* <Stack.Screen name="Map" component={Map}/> */}
+                    <Tab.Screen name="MapScreen" component={MapScreen}/>
                     <Tab.Screen name="Landmark" component={Landmarks}/>
                     <Tab.Screen name="Routes" component={Routes}/>
                     <Tab.Screen name="What's Local?" component={WhatsLocal}/>
