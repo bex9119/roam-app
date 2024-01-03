@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import createGrid from "../utils/utils";
 import mapStyle from "../assets/mapStyle.json"
 
+
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
@@ -74,7 +75,7 @@ export default function MapScreen() {
           <Polygon
             key={`tile${index}`}
             coordinates={tile.location}
-            fillColor={tile.fill ? "rgba(0,0,0,1)" : "rgba(0,0,0,0)"}
+            fillColor={tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"}
             strokeColor="rgba(0,0,0,0)"
           />
         );
