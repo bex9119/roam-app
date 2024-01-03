@@ -21,32 +21,43 @@ const createGrid = () => {
   });
   grid.forEach((latLong, index) => {
     tiles.push({
-      // location: [
-      //   {
-      //     latitude: latLong.latitude,
-      //     longitude: latLong.longitude,
-      //   },
-      //   {
-      //     latitude: latLong.latitude,
-      //     longitude: latLong.longitude + longitudeInterval,
-      //   },
-      //   {
-      //     latitude: latLong.latitude + latitudeInterval,
-      //     longitude: latLong.longitude + longitudeInterval,
-      //   },
-      //   {
-      //     latitude: latLong.latitude + latitudeInterval,
-      //     longitude: latLong.longitude,
-      //   },
-      // ],
+      location: [
+        {
+          latitude: latLong.latitude,
+          longitude: latLong.longitude,
+        },
+        {
+          latitude: latLong.latitude,
+          longitude: latLong.longitude + longitudeInterval,
+        },
+        {
+          latitude: latLong.latitude + latitudeInterval,
+          longitude: latLong.longitude + longitudeInterval,
+        },
+        {
+          latitude: latLong.latitude + latitudeInterval,
+          longitude: latLong.longitude,
+         },
+       ],
       fill: true,
-      id: 0
-      // sortLat: [latLong.latitude, latLong.latitude + latitudeInterval],
-      // sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
+       sortLat: [latLong.latitude, latLong.latitude + latitudeInterval],
+       sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
     });
   });
   console.log(tiles.length)
   return tiles
 };
+
+function gridSquareId(){
+  //we want two map collections on firebase
+  //one stores map grids
+  //other stores locations of users
+  //i.e id of grid squares
+  //when someone views map, make request to firebase to mapgrid with their user_id.
+  //also request their history of squares than filter mapgrid to remove any squares of id's in grid array
+  //store user history in state for conditional rendering.
+  //when user closes app, local state updated to firebase to reflect changes on front end to backend.
+  
+}
 
 export default createGrid;
