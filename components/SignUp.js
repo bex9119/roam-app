@@ -6,7 +6,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config";
 import { collection, addDoc } from "firebase/firestore";
 
-export default function SignUp() {
+export default function SignUp({navigation}) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -39,7 +39,6 @@ export default function SignUp() {
                             "User document written with ID: ",
                             docRef.id
                         );
-                        setModalVisible(true);
                         // Now you can navigate to the home page or perform other actions
                     })
                     .catch((error) => {

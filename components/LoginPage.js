@@ -76,7 +76,7 @@ export default function LoginPage({navigation}) {
                     title="submit"
                     onPress={handleSubmit}
                 />
-                <Button title="Sign-up" onPress={()=> {navigvation.navigate('Sign-up')}}/>
+                <Button title="Sign-up" onPress={()=> {navigation.navigate('Sign-up')}}/>
             </View>{" "}
         </>
     );

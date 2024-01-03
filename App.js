@@ -8,26 +8,22 @@ import WhatsLocal from "./components/WhatsLocal";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Routes from "./components/Routes";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-
-
-
-
-const Stack = createNativeStackNavigator();
+//const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator>
-                    
-                    <Stack.Screen name="Login" component={LoginPage}/>
-                    <Stack.Screen name="Sign-up" component={SignUp}/>
+            <Tab.Navigator>
+                    <Tab.Screen name="Login" component={LoginPage}/>
+                    <Tab.Screen name="Sign-up" component={SignUp}/>
                     {/* <Stack.Screen name="Map" component={Map}/> */}
-                    <Stack.Screen name="Landmark" component={Landmarks}/>
-                    <Stack.Screen name="Routes" component={Routes}/>
-                    <Stack.Screen name="What's Local?" component={WhatsLocal}/>
-                    
-            </Stack.Navigator>
+                    <Tab.Screen name="Landmark" component={Landmarks}/>
+                    <Tab.Screen name="Routes" component={Routes}/>
+                    <Tab.Screen name="What's Local?" component={WhatsLocal}/>
+            </Tab.Navigator>
         </NavigationContainer>
     );
 }
