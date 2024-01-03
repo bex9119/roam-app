@@ -21,7 +21,7 @@ export default function App() {
                     <Tab.Screen name="Login" component={LoginPage}/>
                     <Tab.Screen name="Sign-up" component={SignUp}/>
                     <Tab.Screen name="MapScreen" component={MapScreen}/>
-                    <Tab.Screen name="Landmark" component={Landmarks}/>
+                    <Tab.Screen name="Landmarks" component={Landmarks}/>
                     <Tab.Screen name="Routes" component={Routes}/>
                     <Tab.Screen name="What's Local?" component={WhatsLocal}/>
             </Tab.Navigator>
