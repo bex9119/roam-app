@@ -6,7 +6,8 @@ import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config";
 import { collection, addDoc } from "firebase/firestore";
 
-export default function Login() {
+
+export default function LoginPage({navigation}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -30,9 +31,9 @@ export default function Login() {
             console.log(error);
             // ..
         });
-
-        
     }
+
+
 
     // if (modalVisible) {
     //     return (
@@ -75,6 +76,7 @@ export default function Login() {
                     title="submit"
                     onPress={handleSubmit}
                 />
+                <Button title="Sign-up" onPress={()=> {navigvation.navigate('Sign-up')}}/>
             </View>{" "}
         </>
     );
