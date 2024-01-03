@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import MapView, { Polyline, Polygon } from "../utils/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/utils";
 import mapStyle from "../assets/mapStyle.json"
-
+import { UserContext } from "../contexts/UserContext";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
+  const {currentUser, setCurrentUser} = useContext(UserContext)
+
+  console.log(currentUser)
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -76,7 +79,7 @@ export default function MapScreen() {
             key={`tile${index}`}
             coordinates={tile.location}
             fillColor={tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"}
-            strokeColor="rgba(0,0,0,0)"
+            strokeColor="rgba(0,0,0,1)"
           />
         );
       })}

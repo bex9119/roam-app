@@ -4,13 +4,13 @@ import { getAuth } from "firebase/auth";
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB71DceSIXJslaaayEGgpgH9NeDDqEf3dE",
-    authDomain: "roam-firebase.firebaseapp.com",
-    projectId: "roam-firebase",
-    storageBucket: "roam-firebase.appspot.com",
-    messagingSenderId: "501120160148",
-    appId: "1:501120160148:web:6fe23b58abae3808f2ff81"
-};
+    apiKey: "AIzaSyABXsr6FE4vCv6whZex4ZLbpvi3qopxY18",
+    authDomain: "roam-firebase-4bc9f.firebaseapp.com",
+    projectId: "roam-firebase-4bc9f",
+    storageBucket: "roam-firebase-4bc9f.appspot.com",
+    messagingSenderId: "561000528696",
+    appId: "1:561000528696:web:5f890c82fac57c484c9fcd"
+  };
   
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app); 
