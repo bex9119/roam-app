@@ -1,4 +1,4 @@
-import { Button, Image, StyleSheet, Text, View } from "react-native-web";
+import { Button, Image, StyleSheet, Text, View } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import { useEffect, useState } from "react";
 import CameraScreen from "./CameraScreen";

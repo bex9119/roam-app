@@ -4,16 +4,20 @@ import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config";
 import { collection, addDoc } from "firebase/firestore";
 import { UserContext } from "../contexts/UserContext";
+
 export default function LoginPage({navigation}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const {currentUser, setCurrentUser} = useContext(UserContext)
+
     //model under construction
     //const [modalVisible, setModalVisible] = useState(false);
+
     // const toggleModal = () => {
     //     setModalVisible(!isModalVisible);
     // };
+
     function handleSubmit() {
         setButtonDisabled(true);
         signInWithEmailAndPassword(auth, email, password)
@@ -29,6 +33,7 @@ export default function LoginPage({navigation}) {
             // ..
         });
     }
+
     return (
         <>
             <View>
@@ -59,6 +64,7 @@ export default function LoginPage({navigation}) {
         </>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 5,
@@ -79,6 +85,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 22,
     },
+
     modalView: {
         margin: 20,
         backgroundColor: "white",

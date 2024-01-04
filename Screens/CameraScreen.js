@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Camera, CameraType } from "expo-camera";
-import { Button, Image, StyleSheet, Text, View } from "react-native-web";
+import { Button, Image, StyleSheet, Text, View } from "react-native";
 
 export default function CameraScreen() {
   const [permission, requestPermission] = Camera.useCameraPermissions();
