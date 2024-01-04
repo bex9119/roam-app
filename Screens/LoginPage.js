@@ -4,12 +4,14 @@ import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config";
 import { collection, addDoc } from "firebase/firestore";
 import { UserContext } from "../contexts/UserContext";
+import { useNavigation } from "@react-navigation/native";
 
-export default function LoginPage({navigation}) {
+export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const {currentUser, setCurrentUser} = useContext(UserContext)
+    const navigation = useNavigation()
 
     //model under construction
     //const [modalVisible, setModalVisible] = useState(false);
@@ -21,16 +23,11 @@ export default function LoginPage({navigation}) {
     function handleSubmit() {
         setButtonDisabled(true);
         signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed up
-            const user = userCredential.user;
-            console.log(user.uid, "Logged in");
-            setCurrentUser(user.uid)
-            // ...
+        .then(() => {
+            navigation.navigate('CreateMap')
         })
         .catch((error) => {
             console.log(error);
-            // ..
         });
     }
 

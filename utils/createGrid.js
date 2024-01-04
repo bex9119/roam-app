@@ -1,20 +1,21 @@
-
+import * as Location from "expo-location";
 
 const createGrid = () => {
-  let longitude = -1.7;
+
+  let longitude = -1.58;
   let longGrid = [];
   let grid = [];
   let tiles = [];
   const longitudeInterval = 0.0025;
   const latitudeInterval = 0.0015;
 
-  while (longitude < -1.6 && longitude > -2) {
+  while (longitude < -1.48 && longitude >= -1.58) {
     longGrid.push(longitude);
     longitude += longitudeInterval;
   }
   longGrid.forEach((long) => {
-    let latitude = 53.72;
-    while (latitude >= 53.7 && latitude < 53.78) {
+    let latitude = 53.78;
+    while (latitude >= 53.78 && latitude < 53.83) {
       let square = { longitude: long, latitude: null };
       square.latitude = latitude;
       latitude += latitudeInterval;

@@ -4,15 +4,16 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { auth, db } from "../config";
 import { collection, addDoc } from "firebase/firestore";
 import { UserContext } from "../contexts/UserContext";
-import createGrid from "../utils/utils";
 import * as Location from "expo-location";
+import { useNavigation } from "@react-navigation/native";
 
-export default function SignUp({ navigation }) {
+export default function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const { currentUser, setCurrentUser } = useContext(UserContext);
+  const navigation = useNavigation()
   //model under construction
   //const [modalVisible, setModalVisible] = useState(false);
 
@@ -21,7 +22,8 @@ export default function SignUp({ navigation }) {
   // };
 
   function handleSubmit() {
-    setButtonDisabled(true);
+      setButtonDisabled(true);
+      navigation.navigate('CreateMap')
       createUserWithEmailAndPassword(auth, email, password)
           .then(() => {
               const auth = getAuth();
