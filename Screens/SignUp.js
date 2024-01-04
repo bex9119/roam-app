@@ -2,18 +2,16 @@ import { useState } from "react";
 import { Button, TextInput, View, Text, StyleSheet } from "react-native";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { auth } from "../config";
-import { useNavigation } from "@react-navigation/native";
 
-export default function SignUp() {
+export default function SignUp({navigation}) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const navigation = useNavigation()
 
   function handleSubmit() {
+      navigation.navigate('CreateMap')
       setButtonDisabled(true);
-      navigation.navigate('MapScreen')
       createUserWithEmailAndPassword(auth, email, password)
           .then(() => {
               const auth = getAuth();

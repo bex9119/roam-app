@@ -5,20 +5,20 @@ import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json"
 
 export default function MapScreen() {
-  const [location, setLocation] = useState({});
+  const [location, setLocation] = useState();
   const [locationHistory, setLocationHistory] = useState([]);
-  const [region, setRegion] = useState(createGrid());
+  const [region, setRegion] = useState();
+
+  if(location && !region) {
+    setRegion(createGrid())
+  }
 
   useEffect(() => {
     const startLocationUpdates = () => {
-      Location.requestForegroundPermissionsAsync().then(({ status }) => {
-        if (status !== "granted") {
-          console.log("error");
-          return "error";
-        }
         return Location.watchPositionAsync(
           { accuracy: Location.Accuracy.Highest, timeInterval: 5000 },
           (location) => {
+            console.log(location)
             const newCoordinates = {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
@@ -29,7 +29,6 @@ export default function MapScreen() {
             });
           }
         );
-      });
     };
     startLocationUpdates();
   }, []);
