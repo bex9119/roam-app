@@ -1,7 +1,5 @@
 import { useState, useContext } from "react";
-import { StyleSheet } from "react-native";
-import { Button, Modal, TextInput, View } from "react-native-web";
-import { Text } from "react-native-web";
+import { Button, Modal, TextInput, View, Text, StyleSheet } from "react-native";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config";
 import { collection, addDoc } from "firebase/firestore";
@@ -62,7 +60,7 @@ export default function LoginPage({navigation}) {
                     onPress={handleSubmit}
                 />
                 <Button title="Sign-up" onPress={()=> {navigation.navigate('Sign-up')}}/>
-            </View>{" "}
+            </View>
         </>
     );
 }
