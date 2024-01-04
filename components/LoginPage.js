@@ -1,40 +1,66 @@
-import { useState } from "react";
-import { StyleSheet } from "react-native";
-import { Button, Modal, TextInput, View } from "react-native-web";
-import { Text } from "react-native-web";
-import {signInWithEmailAndPassword} from "firebase/auth";
-import {auth} from "../config";
+import { useState, useContext } from "react";
+import { Button, Modal, TextInput, View, Text, StyleSheet } from "react-native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../config";
 import { collection, addDoc } from "firebase/firestore";
-
-
-export default function LoginPage({navigation}) {
+import { UserContext } from "../contexts/UserContext";
+import createGrid from "../utils/utils";
+import * as Location from "expo-location";
+export default function SignUp({ navigation }) {
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
+    const { currentUser, setCurrentUser } = useContext(UserContext);
     //model under construction
     //const [modalVisible, setModalVisible] = useState(false);
-
     // const toggleModal = () => {
     //     setModalVisible(!isModalVisible);
     // };
-
     function handleSubmit() {
         setButtonDisabled(true);
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed up
-            const user = userCredential.user;
-            console.log(user.uid, "Logged in");
-            // ...
-        })
-        .catch((error) => {
-            console.log(error);
-            // ..
-        });
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed up
+                const user = userCredential.user;
+                console.log(user.uid);
+                const userData = {
+                    uid: user.uid,
+                    username: username,
+                    email: email,
+                };
+                const usersCollection = collection(db, "users");
+                // Add a new document with a generated ID
+                return addDoc(usersCollection, userData);
+            })
+            .then((userData) => {
+                console.log("data written to firebase");
+                setCurrentUser((currUser) => {
+                    currUser = userData.uid;
+                    return currUser;
+                });
+                // Now you can navigate to the home page or perform other actions
+            });
+        //   .then(() => {
+        //     return Location.requestForegroundPermissionsAsync();
+        //   })
+        //   .then(({ status }) => {
+        //     const mapsCollection = collection(db, "maps");
+        //     if (status === "granted") {
+        //       const mapGrid = createGrid();
+        //       const mapData = {
+        //         uid: currentUser,
+        //         map: mapGrid,
+        //       };
+        //       addDoc(mapsCollection, mapData).then((docRef) => {
+        //         console.log("Map document written with ID: ", docRef.id);
+        //       });
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //   });
     }
-
-
-
     // if (modalVisible) {
     //     return (
     //         <View style={styles.centeredView}>
@@ -50,21 +76,27 @@ export default function LoginPage({navigation}) {
     //         </View>
     //     );
     // }
-
     return (
         <>
             <View>
+                <Text style={styles.text}>username</Text>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder="Type here to translate!"
+                    onChangeText={(newText) => setUsername(newText)}
+                    defaultValue={username}
+                />
                 <Text style={styles.text}>email</Text>
                 <TextInput
                     style={styles.textInput}
-                    placeholder="Type your email..."
+                    placeholder="Type here to translate!"
                     onChangeText={(newText) => setEmail(newText)}
                     defaultValue={email}
                 />
                 <Text style={styles.text}>password</Text>
                 <TextInput
                     style={styles.textInput}
-                    placeholder="Type your password..."
+                    placeholder="Type here to translate!"
                     onChangeText={(newText) => setPassword(newText)}
                     defaultValue={password}
                 />
@@ -76,12 +108,10 @@ export default function LoginPage({navigation}) {
                     title="submit"
                     onPress={handleSubmit}
                 />
-                <Button title="Sign-up" onPress={()=> {navigation.navigate('Sign-up')}}/>
             </View>{" "}
         </>
     );
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 5,
@@ -102,7 +132,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 22,
     },
-
     modalView: {
         margin: 20,
         backgroundColor: "white",
