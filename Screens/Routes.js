@@ -1,4 +1,7 @@
-export default function Routes() {
+import TabNavigator from "./TabNavigator";
 
-    return (<></>)
+export default function Routes() {
+    return (<>
+    <TabNavigator/>
+    </>)
 }

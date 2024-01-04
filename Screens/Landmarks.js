@@ -1,5 +1,11 @@
+import TabNavigator from "./TabNavigator";
+
 export default function Landmarks() {
-    return (<></>)
+    return (
+    <>
+        <TabNavigator/>
+    </>
+        )
 
 
 }

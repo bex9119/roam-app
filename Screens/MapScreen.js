@@ -3,15 +3,12 @@ import MapView, { Polyline, Polygon } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json"
+import TabNavigator from "./TabNavigator";
 
 export default function MapScreen() {
-  const [location, setLocation] = useState();
+  const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
-  const [region, setRegion] = useState();
-
-  if(location && !region) {
-    setRegion(createGrid())
-  }
+  const [region, setRegion] = useState(createGrid());
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -54,6 +51,7 @@ export default function MapScreen() {
   }, [location]);
 
   return (
+    <>
     <MapView
       minZoomLevel={12}
       maxZoomLevel={20}
@@ -67,18 +65,20 @@ export default function MapScreen() {
       provider="google"
       googleMapsApiKey="AIzaSyBdvF-tHDZd-CAjetSae6Eut8VL_xrgpMw"
       customMapStyle={mapStyle}
-    >
+      >
       {region.map((tile, index) => {
         return (
           <Polygon
-            key={`tile${index}`}
-            coordinates={tile.location}
-            fillColor={tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"}
-            strokeColor="rgba(0,0,0,1)"
+          key={`tile${index}`}
+          coordinates={tile.location}
+          fillColor={tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"}
+          strokeColor="rgba(0,0,0,1)"
           />
-        );
-      })}
+          );
+        })}
       {location && <Polyline coordinates={locationHistory} strokeWidth={5} />}
     </MapView>
+    <TabNavigator/>
+        </>
   );
 }
