@@ -13,12 +13,6 @@ export default function SignUp({ navigation }) {
   const [password, setPassword] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const { currentUser, setCurrentUser } = useContext(UserContext);
-  //model under construction
-  //const [modalVisible, setModalVisible] = useState(false);
-
-  // const toggleModal = () => {
-  //     setModalVisible(!isModalVisible);
-  // };
 
   function handleSubmit() {
     setButtonDisabled(true);
@@ -30,66 +24,7 @@ export default function SignUp({ navigation }) {
                 console.log(user);
               }
       })
-    //   .then((userCredential) => {
-    //     // Signed up
-    //     const user = userCredential.user;
-    //     console.log(user.uid);
-    //     const userData = {
-    //       uid: user.uid,
-    //       username: username,
-    //       email: email,
-    //     };
-        // const usersCollection = collection(db, "users");
-        // Add a new document with a generated ID
-        //   return addDoc(usersCollection, userData);
-        //   return userData
-    //   })
-    //   .then((userData) => {
-    //     console.log("data written to firebase");
-    //     setCurrentUser((currUser) => {
-    //       currUser = userData.uid;
-    //       return currUser;
-    //     });
-        // Now you can navigate to the home page or perform other actions
-    //   })
-    //   .then(() => {
-    //     return Location.requestForegroundPermissionsAsync();
-    //   })
-    //     .then(({ status }) => {
-    //       console.log(status)
-        // const mapsCollection = collection(db, "maps");
-        // if (status === "granted") {
-        //   const mapGrid = createGrid();
-        //   const mapData = {
-        //     uid: currentUser,
-        //     map: mapGrid,
-        //   };
-        //   addDoc(mapsCollection, mapData).then((docRef) => {
-        //     console.log("Map document written with ID: ", docRef.id);
-        //   });
-        // }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   }
-
-
-  // if (modalVisible) {
-  //     return (
-  //         <View style={styles.centeredView}>
-  //             <Modal visible={modalVisible}>
-  //                 <View style={styles.centeredView}>
-  //                     <Text>All signed up!</Text>
-  //                     <Button
-  //                         title="OK"
-  //                         onPress={setModalVisible(false)}
-  //                     ></Button>
-  //                 </View>
-  //             </Modal>
-  //         </View>
-  //     );
-  // }
 
   return (
     <>
