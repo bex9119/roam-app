@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CameraScreen from "./CameraScreen";
 
 export default function Landmarks() {
-  const [startCamera, setStartCamera] = useState(null);
+  const [startCamera, setStartCamera] = useState(false);
 
   if (startCamera) {
     return <CameraScreen />;
