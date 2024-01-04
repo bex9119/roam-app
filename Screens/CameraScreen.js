@@ -1,65 +1,80 @@
-import { Camera, CameraType } from 'expo-camera';
-import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Button, Image } from 'react-native';
+import { Camera } from 'expo-camera';
+import {storage} from "../config";
+import { ref, putfile } from "firebase/storage";
 
 export default function CameraScreen() {
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [hasPermission, setHasPermission] = useState(null);
+  const [camera, setCamera] = useState(null);
+  const [image, setImage] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
 
-  // if (!permission) ... 
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
 
-  // if (!permission.granted) ... 
-
-  function toggleCameraType() {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+  const takePicture = async () => {
+    if(camera){
+      const data = await camera.takePictureAsync(null);
+      setImage(data.uri)
+    }
   }
+  
 
+  if (hasPermission === null) {
+      return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
   return (
-    <View style={{flex :1}}>
-      <Camera style={{flex :1}} type={type}>
-        <View style={{flex :1}}>
-          <TouchableOpacity style={{flex :1}} onPress={toggleCameraType}>
-            <Text style={{color: 'black'}}>Flip Camera</Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
+    <View style={styles.container}>
+      <View style={styles.cameraContainer}>
+        <Camera 
+          ref={ref => setCamera(ref)} 
+          style={styles.camera} 
+          type={type} 
+          ratio={'1:1'} 
+        />
+      </View>
+      
+      <Button
+        style={styles.button}
+        title="Flip Image"
+        onPress={() => {
+          setType(
+            type === Camera.Constants.Type.back
+              ? Camera.Constants.Type.front
+              : Camera.Constants.Type.back
+          );
+        }}>
+      </Button>
+      <Button title="Take Picture" onPress={() => takePicture()} />
+      <Button title="Submit" onPress={() => uploadPicture()} />
+      {image && <Image source={{uri: image}} style={{flex:1}} />}
     </View>
   );
 }
 const styles = StyleSheet.create({
-  cameraContainer: {
-      flex: 1,
-      flexDirection: 'row'
+  container: {
+    flex: 1,
+    alignContent: 'center'
   },
-
   camera: {
-    flex:1
+    flex: 1,
+    aspectRatio: 1,
   },
-
-  buttonContainer:{
-    flex:3
+  cameraContainer: {
+    flex: 1,
+    flexDirection: 'row'
   },
-
-  button:{
-    flex:3,
-    backgroundColor: 'black',
-    color: 'white',
+  button: {
+    flex: 0.1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
   },
-  // fixedRatio:{
-  //     flex: 1,
-  //     aspectRatio: 1
-  // }
-})
-
-
-
-
-
-// make a new screen for camera preview and photo to be full screen when taken. 
-// create button for submit or cancel 
-// create methods for uploading to firebase storage. 
-
-
-
-// import { Camera } from 'expo-camera'; import * as Permissions from 'expo-permissions'; async function getCameraPermission() { const { status } = await Permissions.askAsync(Permissions.CAMERA); if (status !== 'granted') { console.error('Camera permission not granted!'); return false; } return true; } 
-
+});
