@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { Button, Modal, TextInput, View, Text, StyleSheet } from "react-native";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { auth, db } from "../config";
 import { collection, addDoc } from "firebase/firestore";
 import { UserContext } from "../contexts/UserContext";
@@ -22,49 +22,58 @@ export default function SignUp({ navigation }) {
 
   function handleSubmit() {
     setButtonDisabled(true);
-
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed up
-        const user = userCredential.user;
-        console.log(user.uid);
-        const userData = {
-          uid: user.uid,
-          username: username,
-          email: email,
-        };
-        const usersCollection = collection(db, "users");
+      createUserWithEmailAndPassword(auth, email, password)
+          .then(() => {
+              const auth = getAuth();
+              const user = auth.currentUser;
+              if (user) {
+                console.log(user);
+              }
+      })
+    //   .then((userCredential) => {
+    //     // Signed up
+    //     const user = userCredential.user;
+    //     console.log(user.uid);
+    //     const userData = {
+    //       uid: user.uid,
+    //       username: username,
+    //       email: email,
+    //     };
+        // const usersCollection = collection(db, "users");
         // Add a new document with a generated ID
-        return addDoc(usersCollection, userData);
-      })
-      .then((userData) => {
-        console.log("data written to firebase");
-        setCurrentUser((currUser) => {
-          currUser = userData.uid;
-          return currUser;
-        });
+        //   return addDoc(usersCollection, userData);
+        //   return userData
+    //   })
+    //   .then((userData) => {
+    //     console.log("data written to firebase");
+    //     setCurrentUser((currUser) => {
+    //       currUser = userData.uid;
+    //       return currUser;
+    //     });
         // Now you can navigate to the home page or perform other actions
-      })
+    //   })
     //   .then(() => {
     //     return Location.requestForegroundPermissionsAsync();
     //   })
-    //   .then(({ status }) => {
-    //     const mapsCollection = collection(db, "maps");
-    //     if (status === "granted") {
-    //       const mapGrid = createGrid();
-    //       const mapData = {
-    //         uid: currentUser,
-    //         map: mapGrid,
-    //       };
-    //       addDoc(mapsCollection, mapData).then((docRef) => {
-    //         console.log("Map document written with ID: ", docRef.id);
-    //       });
-    //     }
+    //     .then(({ status }) => {
+    //       console.log(status)
+        // const mapsCollection = collection(db, "maps");
+        // if (status === "granted") {
+        //   const mapGrid = createGrid();
+        //   const mapData = {
+        //     uid: currentUser,
+        //     map: mapGrid,
+        //   };
+        //   addDoc(mapsCollection, mapData).then((docRef) => {
+        //     console.log("Map document written with ID: ", docRef.id);
+        //   });
+        // }
     //   })
     //   .catch((error) => {
     //     console.log(error);
     //   });
   }
+
 
   // if (modalVisible) {
   //     return (
@@ -114,7 +123,7 @@ export default function SignUp({ navigation }) {
           title="submit"
           onPress={handleSubmit}
         />
-      </View>{" "}
+      </View>
     </>
   );
 }
