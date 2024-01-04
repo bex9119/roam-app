@@ -1,24 +1,14 @@
-import { useState, useContext } from "react";
-import { Button, Modal, TextInput, View, Text, StyleSheet } from "react-native";
+import { useState } from "react";
+import { Button, TextInput, View, Text, StyleSheet } from "react-native";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config";
-import { collection, addDoc } from "firebase/firestore";
-import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    const {currentUser, setCurrentUser} = useContext(UserContext)
     const navigation = useNavigation()
-
-    //model under construction
-    //const [modalVisible, setModalVisible] = useState(false);
-
-    // const toggleModal = () => {
-    //     setModalVisible(!isModalVisible);
-    // };
 
     function handleSubmit() {
         setButtonDisabled(true);

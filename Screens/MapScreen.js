@@ -1,17 +1,13 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import MapView, { Polyline, Polygon } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json"
-import { UserContext } from "../contexts/UserContext";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
-  const {currentUser, setCurrentUser} = useContext(UserContext)
-
-  console.log(currentUser)
 
   useEffect(() => {
     const startLocationUpdates = () => {
