@@ -1,55 +1,25 @@
 import { useState } from "react";
-import { StyleSheet } from "react-native";
-import { Button, Modal, TextInput, View } from "react-native-web";
-import { Text } from "react-native-web";
+import { Button, TextInput, View, Text, StyleSheet } from "react-native";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config";
-import { collection, addDoc } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 
-
-export default function LoginPage({navigation}) {
+export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    //model under construction
-    //const [modalVisible, setModalVisible] = useState(false);
-
-    // const toggleModal = () => {
-    //     setModalVisible(!isModalVisible);
-    // };
+    const navigation = useNavigation()
 
     function handleSubmit() {
         setButtonDisabled(true);
         signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed up
-            const user = userCredential.user;
-            console.log(user.uid, "Logged in");
-            // ...
+        .then(() => {
+            navigation.navigate('CreateMap')
         })
         .catch((error) => {
             console.log(error);
-            // ..
         });
     }
-
-
-
-    // if (modalVisible) {
-    //     return (
-    //         <View style={styles.centeredView}>
-    //             <Modal visible={modalVisible}>
-    //                 <View style={styles.centeredView}>
-    //                     <Text>All signed up!</Text>
-    //                     <Button
-    //                         title="OK"
-    //                         onPress={setModalVisible(false)}
-    //                     ></Button>
-    //                 </View>
-    //             </Modal>
-    //         </View>
-    //     );
-    // }
 
     return (
         <>
@@ -77,7 +47,7 @@ export default function LoginPage({navigation}) {
                     onPress={handleSubmit}
                 />
                 <Button title="Sign-up" onPress={()=> {navigation.navigate('Sign-up')}}/>
-            </View>{" "}
+            </View>
         </>
     );
 }
