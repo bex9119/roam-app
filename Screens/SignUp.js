@@ -10,7 +10,7 @@ export default function SignUp({navigation}) {
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   function handleSubmit() {
-      navigation.navigate('CreateMap')
+      navigation.navigate('MapScreen')
       setButtonDisabled(true);
       createUserWithEmailAndPassword(auth, email, password)
           .then(() => {
