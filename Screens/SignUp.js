@@ -17,8 +17,14 @@ export default function SignUp({navigation}) {
               const auth = getAuth();
               const user = auth.currentUser;
               if (user) {
-                console.log(user);
               }
+
+              return auth;
+          
+      })
+      .then((auth) => {
+        updateProfile(auth.currentUser, { displayName: username })
+        console.log(getAuth().currentUser);
       })
   }
 
