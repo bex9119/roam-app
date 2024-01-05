@@ -2,6 +2,7 @@ import { Button, Image, StyleSheet, Text, View } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import { useEffect, useState } from "react";
 import CameraScreen from "./CameraScreen";
+import CommentsAdder from "./components/CommentsAdder";
 
 export default function Landmarks() {
   const [startCamera, setStartCamera] = useState(false);
@@ -31,6 +32,7 @@ export default function Landmarks() {
             }}
             title="+"
           />
+          <CommentsAdder />
         </View>
       </View>
     );

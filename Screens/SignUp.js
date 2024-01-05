@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { Button, Modal, TextInput, View, Text, StyleSheet } from "react-native";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth";
 import { auth, db } from "../config";
 import { collection, addDoc } from "firebase/firestore";
 import { UserContext } from "../contexts/UserContext";
@@ -21,8 +21,14 @@ export default function SignUp({ navigation }) {
               const auth = getAuth();
               const user = auth.currentUser;
               if (user) {
-                console.log(user);
               }
+
+              return auth;
+          
+      })
+      .then((auth) => {
+        updateProfile(auth.currentUser, { displayName: username })
+        console.log(getAuth().currentUser);
       })
   }
 

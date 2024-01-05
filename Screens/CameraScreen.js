@@ -30,8 +30,10 @@ export default function CameraScreen() {
 
     const pictureRef = ref(storage, filename);
 
-    uploadBytes(pictureRef, uploadUri)
+    return uploadBytes(pictureRef, uploadUri)
     .then((snapshot) => {
+        console.log(image);
+        console.log(snapshot)
         console.log("Image uploaded successfully");
     })
     .catch(error => {
