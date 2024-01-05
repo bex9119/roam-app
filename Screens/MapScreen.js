@@ -1,13 +1,39 @@
 import React, { useEffect, useState } from "react";
-import MapView, { Polyline, Polygon } from "../setup/map";
+import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
-import mapStyle from "../assets/mapStyle.json"
+import mapStyle from "../assets/mapStyle.json";
+import { useNavigation } from "@react-navigation/native";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
+  const navigation = useNavigation();
+
+  const exampleMarkers = [
+    {
+      latitude: 53.8,
+      longitude: -1.54,
+      title: "Centre of Leeds",
+      description: "Pin of centre of Leeds",
+      id: 1,
+    },
+    {
+      latitude: 53.8,
+      longitude: -1.5422,
+      title: "Second test pin",
+      description: "Second test pin",
+      id: 2,
+    },
+    {
+      latitude: 53.8,
+      longitude: -1.53,
+      title: "Third test pin",
+      description: "Third test pin",
+      id: 3,
+    },
+  ];
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -53,11 +79,9 @@ export default function MapScreen() {
       return updatedRegion;
     });
   }, [location]);
-
   return (
     <MapView
       minZoomLevel={12}
-      maxZoomLevel={20}
       style={{ flex: 1 }}
       initialRegion={{
         latitude: 53.8,
@@ -74,12 +98,29 @@ export default function MapScreen() {
           <Polygon
             key={`tile${index}`}
             coordinates={tile.location}
-            fillColor={tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"}
+            fillColor={
+              tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"
+            }
             strokeColor="rgba(0,0,0,1)"
           />
         );
       })}
       {location && <Polyline coordinates={locationHistory} strokeWidth={5} />}
+
+      {exampleMarkers.map((data) => (
+        <Marker
+          onPress={() => {
+            console.log("marker clicked");
+            console.log(data.id, "index");
+            navigation.navigate("Landmark", { id: data.id });
+          }}
+          key={data.id}
+          coordinate={{ latitude: data.latitude, longitude: data.longitude }}
+          title={`Marker ${data.title}`}
+          description={`Description: ${data.description}`}
+          image={require("../assets/pin-image.jpeg")}
+        />
+      ))}
     </MapView>
   );
 }
