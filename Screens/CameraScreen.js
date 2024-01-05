@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 import {storage} from "../config";
-import { ref, putfile } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
 
 export default function CameraScreen() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -22,6 +22,22 @@ export default function CameraScreen() {
       const data = await camera.takePictureAsync(null);
       setImage(data.uri)
     }
+  }
+
+  function uploadPicture () {
+    const uploadUri = image;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1)
+
+    const pictureRef = ref(storage, filename);
+
+    uploadBytes(pictureRef, uploadUri)
+    .then((snapshot) => {
+        console.log("Image uploaded successfully");
+    })
+    .catch(error => {
+        console.error("Error uploading image:", error);
+    });
+
   }
   
 
