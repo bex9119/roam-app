@@ -75,7 +75,7 @@ export default function MapScreen() {
             key={`tile${index}`}
             coordinates={tile.location}
             fillColor={tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"}
-            strokeColor="rgba(0,0,0,1)"
+            strokeColor="rgba(0,0,0,0)"
           />
         );
       })}

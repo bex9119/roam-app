@@ -30,21 +30,25 @@ export default function SignUp() {
         <Text style={styles.text}>username</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Type here to translate!"
+          placeholder="Username"
+          autoCapitalize="none"
           onChangeText={(newText) => setUsername(newText)}
           defaultValue={username}
         />
         <Text style={styles.text}>email</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Type here to translate!"
+          placeholder="Email"
+          autoCapitalize="none"
           onChangeText={(newText) => setEmail(newText)}
           defaultValue={email}
         />
         <Text style={styles.text}>password</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Type here to translate!"
+          placeholder="Password"
+          secureTextEntry 
+          autoCapitalize="none"
           onChangeText={(newText) => setPassword(newText)}
           defaultValue={password}
         />
