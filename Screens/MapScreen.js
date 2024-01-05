@@ -4,11 +4,14 @@ import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
 import { useNavigation } from "@react-navigation/native";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../config";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
+  const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
   const navigation = useNavigation();
 
   const exampleMarkers = [
@@ -79,6 +82,30 @@ export default function MapScreen() {
       return updatedRegion;
     });
   }, [location]);
+
+  useEffect(() => {
+    getDocs(collection(db, "Landmarks"))
+      .then((querySnapshot) => {
+        const landmarkArray = querySnapshot.docs.map((landmarkData) => {
+          return landmarkData._document.data.value.mapValue.fields;
+        });
+        return landmarkArray;
+      })
+      .then((array) => {
+        setFinalLandmarkArray(array);
+      });
+  }, []);
+
+  console.log(finalLandmarkArray, "final array");
+
+  // querySnapshot.forEach((doc) => {
+  //   const landmarkData = doc._document.data.value.mapValue.fields;
+  //   console.log(landmarkData);
+  //   setLandmarkArray((currentLandmarkArray) => {
+  //     return [...currentLandmarkArray, landmarkArray];
+  //   });
+  // });
+
   return (
     <MapView
       minZoomLevel={12}
@@ -107,7 +134,7 @@ export default function MapScreen() {
       })}
       {location && <Polyline coordinates={locationHistory} strokeWidth={5} />}
 
-      {exampleMarkers.map((data) => (
+      {/* {exampleMarkers.map((data) => (
         <Marker
           onPress={() => {
             console.log("marker clicked");
@@ -120,7 +147,7 @@ export default function MapScreen() {
           description={`Description: ${data.description}`}
           // image={require("../assets/pin-image.jpeg")}
         />
-      ))}
+      ))} */}
     </MapView>
   );
 }
