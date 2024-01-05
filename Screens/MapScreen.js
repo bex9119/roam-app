@@ -98,14 +98,10 @@ export default function MapScreen() {
 
   console.log(finalLandmarkArray, "final array");
 
-  // querySnapshot.forEach((doc) => {
-  //   const landmarkData = doc._document.data.value.mapValue.fields;
-  //   console.log(landmarkData);
-  //   setLandmarkArray((currentLandmarkArray) => {
-  //     return [...currentLandmarkArray, landmarkArray];
-  //   });
-  // });
-
+  
+    // finalLandmarkArray.map((data) =>{
+    //   console.log(data.Coordinate.geoPointValue.latitude)
+    //     })
   return (
     <MapView
       minZoomLevel={12}
@@ -134,20 +130,23 @@ export default function MapScreen() {
       })}
       {location && <Polyline coordinates={locationHistory} strokeWidth={5} />}
 
-      {/* {exampleMarkers.map((data) => (
+      {finalLandmarkArray.map((data) => (
         <Marker
-          onPress={() => {
-            console.log("marker clicked");
-            console.log(data.id, "index");
-            navigation.navigate("Landmark", { id: data.id });
+          // onPress={() => {
+          //   console.log("marker clicked");
+          //   console.log(data.id, "index");
+          //   navigation.navigate("Landmark", { id: data.id });
+          // }}
+          key={data.id.integerValue}
+          coordinate={{
+            latitude: data.Coordinate.geoPointValue.latitude,
+            longitude: data.Coordinate.geoPointValue.longitude,
           }}
-          key={data.id}
-          coordinate={{ latitude: data.latitude, longitude: data.longitude }}
-          title={`Marker ${data.title}`}
-          description={`Description: ${data.description}`}
+          title={`Marker ${data.Title.stringValue}`}
+          description={`Description: ${data.Description.stringValue}`}
           // image={require("../assets/pin-image.jpeg")}
         />
-      ))} */}
+      ))}
     </MapView>
   );
 }
