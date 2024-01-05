@@ -118,7 +118,7 @@ export default function MapScreen() {
           coordinate={{ latitude: data.latitude, longitude: data.longitude }}
           title={`Marker ${data.title}`}
           description={`Description: ${data.description}`}
-          image={require("../assets/pin-image.jpeg")}
+          // image={require("../assets/pin-image.jpeg")}
         />
       ))}
     </MapView>
