@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, TextInput, View, Text, StyleSheet } from "react-native";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth";
 import { auth } from "../config";
 
 export default function SignUp({navigation}) {
@@ -22,9 +22,9 @@ export default function SignUp({navigation}) {
               return auth;
           
       })
-      .then((auth) => {
-        updateProfile(auth.currentUser, { displayName: username })
-        console.log(getAuth().currentUser);
+      .then((user) => {
+        updateProfile(user.currentUser, { displayName: username })
+        console.log(user.currentUser, "Current user logged in");
       })
   }
 

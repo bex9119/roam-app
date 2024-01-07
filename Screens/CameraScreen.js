@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button, Image } from 'react-native';
 import { Camera } from 'expo-camera';
-import {storage} from "../config";
-import { ref, uploadBytes } from "firebase/storage";
+import {ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
+import { db, storage } from '../config';
+import {collection, addDoc } from 'firebase/firestore';
+
 
 export default function CameraScreen() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -37,18 +40,34 @@ export default function CameraScreen() {
     const filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
     const pictureRef = ref(storage, filename);
 
+    console.log(getAuth().currentUser);
+  
     fetch(uploadUri)
       .then((response) => response.blob())
       .then((blob) => uploadBytes(pictureRef, blob))
-      .then(() => {
+      .then((snapshot) => {
         console.log("Image uploaded successfully");
+        return getDownloadURL(pictureRef);
+      })
+      .then((url) => {
+        const username = getAuth().currentUser.displayName;
+        const myCollection = collection(db, 'images');
+        const myDocumentData = {
+          username: username,
+          image_url: url,
+          landmarkId: 1
+        };
+  
+        return addDoc(myCollection, myDocumentData);
+      })
+      .then(() => {
+        console.log("Image information added to the collection");
       })
       .catch((error) => {
         console.error("Error uploading image:", error);
       });
-
   }
-
+  
   
 
   if (hasPermission === null) {
