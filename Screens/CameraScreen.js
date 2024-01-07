@@ -9,38 +9,51 @@ export default function CameraScreen() {
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-
+  
   useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
+    Camera.requestCameraPermissionsAsync()
+      .then(({ status }) => {
+        setHasPermission(status === 'granted');
+      })
+      .catch((error) => {
+        console.error("Error requesting camera permissions:", error);
+      });
   }, []);
 
-  const takePicture = async () => {
-    if(camera){
-      const data = await camera.takePictureAsync(null);
-      setImage(data.uri)
+  function takePicture () {
+    if (camera) {
+      camera.takePictureAsync(null)
+        .then((data) => {
+          setImage(data.uri);
+        })
+        .catch((error) => {
+          console.error("Error taking picture:", error);
+        });
     }
-  }
+  };
+  
+  
+  
+   
 
-  function uploadPicture () {
+
+  function uploadPicture() {
     const uploadUri = image;
-    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1)
-
+    const filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
     const pictureRef = ref(storage, filename);
 
-    return uploadBytes(pictureRef, uploadUri)
-    .then((snapshot) => {
-        console.log(image);
-        console.log(snapshot)
+    fetch(uploadUri)
+      .then((response) => response.blob())
+      .then((blob) => uploadBytes(pictureRef, blob))
+      .then(() => {
         console.log("Image uploaded successfully");
-    })
-    .catch(error => {
+      })
+      .catch((error) => {
         console.error("Error uploading image:", error);
-    });
+      });
 
   }
+
   
 
   if (hasPermission === null) {
