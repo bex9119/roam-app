@@ -3,13 +3,14 @@ import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import { Pressable, Text, View, StyleSheet } from "react-native";
+import { Pressable, Text, View, StyleSheet, Modal } from "react-native";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
   const [addButtonClicked, setAddButtonClicked] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -58,7 +59,9 @@ export default function MapScreen() {
 
   function addPinFunction() {
     console.log(location, "in new function");
+    console.log("clicked");
     setAddButtonClicked(true);
+    setIsModalVisible(true);
   }
   return (
     <View style={styles.container}>
@@ -102,29 +105,20 @@ export default function MapScreen() {
           )}
         </MapView>
       </View>
+      {addButtonClicked && (
+        <Modal isVisible={true}>
+          <View style={styles.modal}>
+            <Text>Test</Text>
+          </View>
+        </Modal>
+      )}
+
       <Pressable style={styles.addPinButton} onPress={addPinFunction}>
         <Text>Add a new landmark</Text>
       </Pressable>
     </View>
   );
 }
-
-// <Marker
-//           onPress={() => {
-//             {
-//               console.log("marker clicked");
-//               console.log(data.id, "index");
-//               navigation.navigate("Landmark", { id: data.id });
-//             }
-//           }}
-//           key={data.id}
-//           coordinate={{
-//           latitude: data.Coordinate._lat,
-//           longitude: data.Coordinate._long,
-//           }}
-//           title={`${data.Title}`}
-//            description={`${data.Description}`}
-//        />
 
 const styles = StyleSheet.create({
   container: {
@@ -140,5 +134,9 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#f0f0f0",
     backgroundColor: "#2596be",
+  },
+  modal: {
+    height: "10%",
+    width: "10%",
   },
 });
