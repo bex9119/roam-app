@@ -5,13 +5,14 @@ import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../config";
+import { useNavigation } from "@react-navigation/core";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
   useEffect(() => {
     const startLocationUpdates = () => {
       Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -102,8 +103,7 @@ export default function MapScreen() {
           onPress={() => {
             {
               console.log("marker clicked");
-              console.log(data.id, "index");
-              // navigation.navigate("Landmark", { id: data.id });
+              navigation.navigate("Landmarks", { id: data.id });
             }
           }}
           key={data.id}
