@@ -22,7 +22,7 @@ const createGrid = () => {
       grid.push(square);
     }
   });
-  grid.forEach((latLong, index) => {
+  grid.forEach((latLong) => {
     tiles.push({
       location: [
         {
@@ -47,7 +47,6 @@ const createGrid = () => {
        sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
     });
   });
-  console.log(tiles.length)
   return tiles
 };
 

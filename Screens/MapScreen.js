@@ -14,30 +14,6 @@ export default function MapScreen() {
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
   const navigation = useNavigation();
 
-  const exampleMarkers = [
-    {
-      latitude: 53.8,
-      longitude: -1.54,
-      title: "Centre of Leeds",
-      description: "Pin of centre of Leeds",
-      id: 1,
-    },
-    {
-      latitude: 53.8,
-      longitude: -1.5422,
-      title: "Second test pin",
-      description: "Second test pin",
-      id: 2,
-    },
-    {
-      latitude: 53.8,
-      longitude: -1.53,
-      title: "Third test pin",
-      description: "Third test pin",
-      id: 3,
-    },
-  ];
-
   useEffect(() => {
     const startLocationUpdates = () => {
       Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -84,24 +60,19 @@ export default function MapScreen() {
   }, [location]);
 
   useEffect(() => {
+    const landmarkArray = []
     getDocs(collection(db, "Landmarks"))
       .then((querySnapshot) => {
-        const landmarkArray = querySnapshot.docs.map((landmarkData) => {
-          return landmarkData._document.data.value.mapValue.fields;
-        });
+        querySnapshot.forEach((landmarkData) => {
+          landmarkArray.push(landmarkData.data());
+        })
         return landmarkArray;
+        })
+        .then((array) => {
+          setFinalLandmarkArray(array);
       })
-      .then((array) => {
-        setFinalLandmarkArray(array);
-      });
   }, []);
 
-  console.log(finalLandmarkArray, "final array");
-
-  
-    // finalLandmarkArray.map((data) =>{
-    //   console.log(data.Coordinate.geoPointValue.latitude)
-    //     })
   return (
     <MapView
       minZoomLevel={12}
@@ -132,21 +103,22 @@ export default function MapScreen() {
 
       {finalLandmarkArray.map((data) => (
         <Marker
-          // onPress={() => {
-          //   console.log("marker clicked");
-          //   console.log(data.id, "index");
-          //   navigation.navigate("Landmark", { id: data.id });
-          // }}
-          key={data.id.integerValue}
-          coordinate={{
-            latitude: data.Coordinate.geoPointValue.latitude,
-            longitude: data.Coordinate.geoPointValue.longitude,
+          onPress={() => {
+            {
+              console.log("marker clicked");
+              console.log(data.id, "index");
+              navigation.navigate("Landmark", { id: data.id });
+            }
           }}
-          title={`Marker ${data.Title.stringValue}`}
-          description={`Description: ${data.Description.stringValue}`}
-          // image={require("../assets/pin-image.jpeg")}
-        />
-      ))}
+          key={data.id}
+          coordinate={{
+          latitude: data.Coordinate._lat,
+          longitude: data.Coordinate._long,
+          }}
+          title={`${data.Title}`}
+           description={`${data.Description}`}
+       />
+       ))}
     </MapView>
   );
 }
