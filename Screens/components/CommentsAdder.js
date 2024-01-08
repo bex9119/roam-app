@@ -5,7 +5,7 @@ import {db} from '../../config'
 import {collection, addDoc } from 'firebase/firestore';
 
 
-export default function CommentsAdder(){
+export default function CommentsAdder({setComments}){
     const [comment, setComment] = useState("");
 
     function handleSubmit(){
@@ -17,7 +17,7 @@ export default function CommentsAdder(){
         const myDocumentData = {
             username: username,
             body: comment,
-            landmarkId: 2
+            landmarkId: 1
             //later on add landmark_id
         };
         
@@ -25,6 +25,9 @@ export default function CommentsAdder(){
         addDoc(myCollection, myDocumentData)
         .then(() => {
             console.log('comment added');
+            setComments((currComments) => {
+                return [...currComments, [comment, username]]
+            })
             setComment('')
         })
         .catch((error) => {
