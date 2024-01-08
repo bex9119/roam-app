@@ -12,38 +12,36 @@ export default function CommentsAdder(){
         console.log("submitted");
         const username = getAuth().currentUser.displayName;
         console.log(username);
-
+        
         const myCollection = collection(db, 'comments');
         const myDocumentData = {
             username: username,
             body: comment,
+            landmarkId: 2
             //later on add landmark_id
         };
-
+        
         // Add the document to the collection
         addDoc(myCollection, myDocumentData)
         .then(() => {
             console.log('comment added');
+            setComment('')
         })
         .catch((error) => {
             console.log('error:', error)
         })
-
-
-
     }
     
     return (
-        <View style={styles.container}>
-                <Text>Add your comment:</Text>
+        <View>
                 <TextInput
                 style={styles.textInput}
                     placeholder="Type your comment here..."
-                    onChangeText={(newText) => setComment(newText)}
-                    defaultValue={comment}
+                    placeholderTextColor='white'
+                    value={comment}
+                    onChangeText={(value) => setComment(value)}
                 />
-                <Button
-                    style={styles.button}
+                <Button style={styles.button}
                     title="Add comment"
                     onPress={handleSubmit}
                 />
@@ -52,19 +50,15 @@ export default function CommentsAdder(){
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 5,
-        backgroundColor: "black",
-        color: "white",
-        fontSize: 20,
-        alignContent: "space-between",
-    },
     textInput: {
-        backgroundColor: "black",
         color: "white",
+        backgroundColor: "black",
         height: 40,
         fontSize: 20,
     }, 
-    text: { fontSize: 20 },
+    text: { 
+        fontSize: 20, 
+        color: 'white' 
+    },
     button: { margin: 10 }
 });
