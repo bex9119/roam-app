@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import MapView, { Polyline, Polygon } from "../setup/map";
+import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../config";
+
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
+  const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
+  // const navigation = useNavigation();
   useEffect(() => {
     const startLocationUpdates = () => {
       Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -50,10 +55,23 @@ export default function MapScreen() {
       return updatedRegion;
     });
   }, [location]);
+
+  useEffect(() => {
+    const landmarkArray = [];
+    getDocs(collection(db, "Landmarks"))
+      .then((querySnapshot) => {
+        querySnapshot.forEach((landmarkData) => {
+          landmarkArray.push(landmarkData.data());
+        });
+        return landmarkArray;
+      })
+      .then((array) => {
+        setFinalLandmarkArray(array);
+      });
+  }, []);
   return (
     <MapView
       minZoomLevel={12}
-      maxZoomLevel={20}
       style={{ flex: 1 }}
       initialRegion={{
         latitude: 53.8,
@@ -73,11 +91,30 @@ export default function MapScreen() {
             fillColor={
               tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"
             }
-            strokeColor="rgba(0,0,0,0)"
+            strokeColor="rgba(0,0,0,1)"
           />
         );
       })}
       {location && <Polyline coordinates={locationHistory} strokeWidth={5} />}
+
+      {finalLandmarkArray.map((data) => (
+        <Marker
+          onPress={() => {
+            {
+              console.log("marker clicked");
+              console.log(data.id, "index");
+              // navigation.navigate("Landmark", { id: data.id });
+            }
+          }}
+          key={data.id}
+          coordinate={{
+            latitude: data.Coordinate._lat,
+            longitude: data.Coordinate._long,
+          }}
+          title={`${data.Title}`}
+          description={`${data.Description}`}
+        />
+      ))}
     </MapView>
   );
 }
