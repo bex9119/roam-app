@@ -1,4 +1,4 @@
 export default function Routes() {
-
-    return (<></>)
+    return (<>
+    </>)
 }

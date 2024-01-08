@@ -3,9 +3,6 @@ import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import { useNavigation } from "@react-navigation/native";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../config";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
@@ -13,7 +10,6 @@ export default function MapScreen() {
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
   const navigation = useNavigation();
-
   useEffect(() => {
     const startLocationUpdates = () => {
       Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -38,7 +34,6 @@ export default function MapScreen() {
     };
     startLocationUpdates();
   }, []);
-
   useEffect(() => {
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
@@ -60,19 +55,18 @@ export default function MapScreen() {
   }, [location]);
 
   useEffect(() => {
-    const landmarkArray = []
+    const landmarkArray = [];
     getDocs(collection(db, "Landmarks"))
       .then((querySnapshot) => {
         querySnapshot.forEach((landmarkData) => {
           landmarkArray.push(landmarkData.data());
-        })
+        });
         return landmarkArray;
-        })
-        .then((array) => {
-          setFinalLandmarkArray(array);
       })
+      .then((array) => {
+        setFinalLandmarkArray(array);
+      });
   }, []);
-
   return (
     <MapView
       minZoomLevel={12}
@@ -112,13 +106,13 @@ export default function MapScreen() {
           }}
           key={data.id}
           coordinate={{
-          latitude: data.Coordinate._lat,
-          longitude: data.Coordinate._long,
+            latitude: data.Coordinate._lat,
+            longitude: data.Coordinate._long,
           }}
           title={`${data.Title}`}
-           description={`${data.Description}`}
-       />
-       ))}
+          description={`${data.Description}`}
+        />
+      ))}
     </MapView>
   );
 }

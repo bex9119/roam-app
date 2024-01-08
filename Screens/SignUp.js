@@ -1,26 +1,30 @@
 import { useState } from "react";
 import { Button, TextInput, View, Text, StyleSheet } from "react-native";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth";
 import { auth } from "../config";
-import { useNavigation } from "@react-navigation/native";
 
-export default function SignUp() {
+export default function SignUp({navigation}) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const navigation = useNavigation()
 
   function handleSubmit() {
-      setButtonDisabled(true);
       navigation.navigate('MapScreen')
+      setButtonDisabled(true);
       createUserWithEmailAndPassword(auth, email, password)
           .then(() => {
               const auth = getAuth();
               const user = auth.currentUser;
               if (user) {
-                console.log(user);
               }
+
+              return auth;
+          
+      })
+      .then((user) => {
+        updateProfile(user.currentUser, { displayName: username })
+        console.log(user.currentUser, "Current user logged in");
       })
   }
 
@@ -30,21 +34,25 @@ export default function SignUp() {
         <Text style={styles.text}>username</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Type here to translate!"
+          placeholder="Username"
+          autoCapitalize="none"
           onChangeText={(newText) => setUsername(newText)}
           defaultValue={username}
         />
         <Text style={styles.text}>email</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Type here to translate!"
+          placeholder="Email"
+          autoCapitalize="none"
           onChangeText={(newText) => setEmail(newText)}
           defaultValue={email}
         />
         <Text style={styles.text}>password</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Type here to translate!"
+          placeholder="Password"
+          secureTextEntry 
+          autoCapitalize="none"
           onChangeText={(newText) => setPassword(newText)}
           defaultValue={password}
         />
