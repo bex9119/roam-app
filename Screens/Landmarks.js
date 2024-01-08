@@ -3,6 +3,7 @@ import { Camera, CameraType } from "expo-camera";
 import { useEffect, useState } from "react";
 import CameraScreen from "./CameraScreen";
 import CommentsList from "./components/CommentsList";
+// const { id } = route.params;
 
 export default function Landmarks() {
   const [startCamera, setStartCamera] = useState(false);

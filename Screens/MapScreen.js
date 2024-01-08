@@ -3,13 +3,15 @@ import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../config";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   useEffect(() => {
     const startLocationUpdates = () => {
       Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -101,7 +103,7 @@ export default function MapScreen() {
             {
               console.log("marker clicked");
               console.log(data.id, "index");
-              navigation.navigate("Landmark", { id: data.id });
+              // navigation.navigate("Landmark", { id: data.id });
             }
           }}
           key={data.id}
