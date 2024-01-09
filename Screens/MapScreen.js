@@ -6,9 +6,9 @@ import mapStyle from "../assets/mapStyle.json";
 import { addDoc, collection, getDocs, GeoPoint } from "firebase/firestore";
 import { db } from "../config";
 import Modal from "react-native-modal"
-// import  useNavigation  from “@react-navigation/core”
 import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/core";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});

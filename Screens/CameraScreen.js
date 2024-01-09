@@ -7,12 +7,13 @@ import { db, storage } from '../config';
 import {collection, addDoc } from 'firebase/firestore';
 
 
-export default function CameraScreen() {
+export default function CameraScreen({landmarkId, setStartCamera}) {
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  
+  // const [retake, setRetake] = useState('Take Picture')
+
   useEffect(() => {
     Camera.requestCameraPermissionsAsync()
       .then(({ status }) => {
@@ -28,6 +29,7 @@ export default function CameraScreen() {
       camera.takePictureAsync(null)
         .then((data) => {
           setImage(data.uri);
+          // setRetake('Retake Picture')
         })
         .catch((error) => {
           console.error("Error taking picture:", error);
@@ -55,12 +57,13 @@ export default function CameraScreen() {
         const myDocumentData = {
           username: username,
           image_url: url,
-          landmarkId: 1
+          landmarkId: landmarkId
         };
   
         return addDoc(myCollection, myDocumentData);
       })
       .then(() => {
+        setStartCamera(false)
         console.log("Image information added to the collection");
       })
       .catch((error) => {
@@ -98,8 +101,9 @@ export default function CameraScreen() {
           );
         }}>
       </Button>
-      <Button title="Take Picture" onPress={() => takePicture()} />
-      <Button title="Submit" onPress={() => uploadPicture()} />
+      <Button title='Take Picture' onPress={() => takePicture()} />
+      <Button title="Confirm" onPress={() => uploadPicture()} />
+      <Button title="Close Camera" onPress={() => {setStartCamera(false)}}/>
       {image && <Image source={{uri: image}} style={{flex:1}} />}
     </View>
   );
