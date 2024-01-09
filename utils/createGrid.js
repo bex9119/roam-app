@@ -1,23 +1,23 @@
 import * as Location from "expo-location";
-const tomLong = -1.56612;
-const tomLat = 53.82441;
+const startLong = -1.59612;
+const startLat = 53.8;
 
 const createGrid = () => {
-  let longitude = tomLong - 0.005;
+  let longitude = startLong;
   let longGrid = [];
   let grid = [];
   let tiles = [];
-  const longitudeInterval = 0.0025;
-  const latitudeInterval = 0.0015;
+  const longitudeInterval = 0.001;
+  const latitudeInterval = 0.00066;
 
-  while (longitude < tomLong + 0.02 && longitude >= tomLong - 0.02) {
+  while (longitude < startLong + 0.05 && longitude >= startLong) {
     longGrid.push(longitude);
     longitude += longitudeInterval;
   }
 
   longGrid.forEach((long) => {
-    let latitude = tomLat - 0.0025;
-    while (latitude >= tomLat - 0.01 && latitude < tomLat + 0.01) {
+    let latitude = startLat;
+    while (latitude >= startLat && latitude < startLat + 0.03) {
       let square = { longitude: long, latitude: null };
       square.latitude = latitude;
       latitude += latitudeInterval;

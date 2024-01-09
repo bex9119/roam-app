@@ -42,7 +42,7 @@ export default function MapScreen() {
           return "error";
         }
         return Location.watchPositionAsync(
-          { accuracy: Location.Accuracy.Highest, timeInterval: 5000 },
+          { accuracy: Location.Accuracy.Highest, timeInterval: 2000 },
           (location) => {
             const newCoordinates = {
               latitude: location.coords.latitude,
@@ -50,14 +50,14 @@ export default function MapScreen() {
             };
             setLocation(newCoordinates);
 
-            setGeoHistory((currGeoHistory) => {
-              const currGeoHash = Geohash.encode(
-                location.latitude,
-                location.longitude,
-                7
-              );
-              if (currGeoHistory) return [...currGeoHistory, geoHistory];
-            });
+            // setGeoHistory((currGeoHistory) => {
+            //   const currGeoHash = Geohash.encode(
+            //     location.latitude,
+            //     location.longitude,
+            //     7
+            //   );
+            //   if (currGeoHistory) return [...currGeoHistory, geoHistory];
+            // });
 
             setLocationHistory((currHistory) => {
               return [...currHistory, newCoordinates];
@@ -132,7 +132,7 @@ export default function MapScreen() {
     <View style={styles.container}>
       <View style={styles.mapView}>
         <MapView
-          minZoomLevel={15}
+          minZoomLevel={5}
           style={{ flex: 1, height: "100%" }}
           initialRegion={{
             latitude: 53.8,
