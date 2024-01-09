@@ -7,21 +7,24 @@ import { NavigationContainer } from "@react-navigation/native";
 import Routes from "./Screens/Routes";
 import MapScreen from "./Screens/MapScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { PaperProvider } from 'react-native-paper';
 
 export default function App() {
   const Tab = createBottomTabNavigator();
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Login" component={LoginPage} />
-        <Tab.Screen name="Sign-up" component={SignUp} />
-        <Tab.Screen name="MapScreen" component={MapScreen} />
-        <Tab.Screen name="Landmarks" component={Landmarks} />
-        <Tab.Screen name="Routes" component={Routes} />
-        <Tab.Screen name="What's Local?" component={WhatsLocal} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Login" component={LoginPage} />
+          <Tab.Screen name="Sign-up" component={SignUp} />
+          <Tab.Screen name="MapScreen" component={MapScreen} />
+          <Tab.Screen name="Landmarks" component={Landmarks} />
+          <Tab.Screen name="Routes" component={Routes} />
+          <Tab.Screen name="What's Local?" component={WhatsLocal} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 
