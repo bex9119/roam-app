@@ -3,8 +3,11 @@ import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, GeoPoint } from "firebase/firestore";
 import { db } from "../config";
+import Modal from "react-native-modal";
+import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
+// import { useNavigation } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/core";
 
 export default function MapScreen() {
@@ -13,6 +16,10 @@ export default function MapScreen() {
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
   const navigation = useNavigation();
+  const [addButtonClicked, setAddButtonClicked] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
+
   useEffect(() => {
     const startLocationUpdates = () => {
       Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -62,59 +69,156 @@ export default function MapScreen() {
     getDocs(collection(db, "Landmarks"))
       .then((querySnapshot) => {
         querySnapshot.forEach((landmarkData) => {
-          landmarkArray.push(landmarkData.data());
+          const landmarkDataObject = landmarkData.data();
+          landmarkDataObject.id = landmarkData.id;
+          landmarkArray.push(landmarkDataObject);
         });
         return landmarkArray;
       })
       .then((array) => {
         setFinalLandmarkArray(array);
       });
-  }, []);
-  return (
-    <MapView
-      minZoomLevel={12}
-      style={{ flex: 1 }}
-      initialRegion={{
-        latitude: 53.8,
-        longitude: -1.54,
-        latitudeDelta: 0.09,
-        longitudeDelta: 0.04,
-      }}
-      provider="google"
-      googleMapsApiKey="AIzaSyBdvF-tHDZd-CAjetSae6Eut8VL_xrgpMw"
-      customMapStyle={mapStyle}
-    >
-      {region.map((tile, index) => {
-        return (
-          <Polygon
-            key={`tile${index}`}
-            coordinates={tile.location}
-            fillColor={
-              tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"
-            }
-            strokeColor="rgba(0,0,0,1)"
-          />
-        );
-      })}
-      {location && <Polyline coordinates={locationHistory} strokeWidth={5} />}
+  }, [newLandmarkTitle]);
 
-      {finalLandmarkArray.map((data) => (
-        <Marker
-          onPress={() => {
-            {
-              console.log("marker clicked");
-              navigation.navigate("Landmarks", { id: data.id });
-            }
+  function addPinFunction() {
+    setAddButtonClicked(true);
+    setIsModalVisible(true);
+  }
+
+  function submitLandmark() {
+    const landmarksCollection = collection(db, "Landmarks");
+    const landmarkData = {
+      Title: newLandmarkTitle,
+      Coordinate: new GeoPoint(location.latitude, location.longitude),
+    };
+    addDoc(landmarksCollection, landmarkData)
+      .then((data) => {
+        setNewLandmarkTitle("");
+        navigation.navigate("Landmarks", { id: data.id });
+        setIsModalVisible(false);
+      })
+      .catch((error) => {
+        console.log("error:", error);
+      });
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.mapView}>
+        <MapView
+          minZoomLevel={7}
+          style={{ flex: 1, height: "100%" }}
+          initialRegion={{
+            latitude: 53.8,
+            longitude: -1.54,
+            latitudeDelta: 0.09,
+            longitudeDelta: 0.04,
           }}
-          key={data.id}
-          coordinate={{
-            latitude: data.Coordinate._lat,
-            longitude: data.Coordinate._long,
-          }}
-          title={`${data.Title}`}
-          description={`${data.Description}`}
-        />
-      ))}
-    </MapView>
+          provider="google"
+          googleMapsApiKey="AIzaSyBdvF-tHDZd-CAjetSae6Eut8VL_xrgpMw"
+          customMapStyle={mapStyle}
+        >
+          {region.map((tile, index) => {
+            return (
+              <Polygon
+                key={`tile${index}`}
+                coordinates={tile.location}
+                fillColor={
+                  tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"
+                }
+                strokeColor="rgba(0,0,0,1)"
+              />
+            );
+          })}
+          {location && (
+            <Polyline coordinates={locationHistory} strokeWidth={5} />
+          )}
+
+          {finalLandmarkArray.map((data, index) => (
+            <Marker
+              onPress={() => {
+                {
+                  navigation.navigate("Landmarks", { id: data.id });
+                }
+              }}
+              key={index}
+              coordinate={{
+                latitude: data.Coordinate._lat,
+                longitude: data.Coordinate._long,
+              }}
+              title={`${data.Title}`}
+              description={`${data.Description}`}
+            />
+          ))}
+        </MapView>
+      </View>
+      {addButtonClicked && (
+        <View style={styles.separator}>
+          <Modal isVisible={isModalVisible}>
+            <View style={styles.modal}>
+              <TextInput
+                placeholder="What Landmark is this?"
+                style={styles.textInput}
+                onChangeText={(title) => setNewLandmarkTitle(title)}
+              />
+              <Pressable style={styles.addPinButton} onPress={submitLandmark}>
+                <Text>Submit</Text>
+              </Pressable>
+            </View>
+          </Modal>
+        </View>
+      )}
+
+      <Pressable style={styles.addPinButton} onPress={addPinFunction}>
+        <Text>Add a new landmark</Text>
+      </Pressable>
+    </View>
   );
 }
+
+// <Image
+// source="require(../../../assets/cyclist-icon.png)"
+// style={styles.markerImage}
+// />
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  separator: {
+    marginVertical: 30,
+    height: 0.5,
+    width: "80%",
+  },
+  mapView: {
+    height: "90%",
+    width: "100%",
+  },
+  addPinButton: {
+    padding: 20,
+    margin: 10,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#f0f0f0",
+    backgroundColor: "#2596be",
+    width: "50%",
+    alignItems: "center",
+    marginLeft: "25%",
+  },
+  modal: {
+    backgroundColor: "#ffffff",
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: "#000",
+    borderStyle: "solid",
+    height: "20%",
+  },
+  textInput: {
+    backgroundColor: "white",
+    height: 40,
+    fontSize: 20,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: "#ffffff",
+    justifyContent: "center",
+  },
+});
