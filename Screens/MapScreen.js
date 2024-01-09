@@ -3,11 +3,17 @@ import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import { addDoc, collection, doc, getDoc, getDocs, GeoPoint } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  GeoPoint,
+} from "firebase/firestore";
 import { db } from "../config";
 import Modal from "react-native-modal";
 import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
-// import { useNavigation } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/core";
 
 export default function MapScreen() {
@@ -22,9 +28,9 @@ export default function MapScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   function loadMaps() {
-    return getDoc(doc(db, 'Maps', 'HJLCbJGvssb2onQTbiy4')).then((snapshot)=> {
-     return snapshot.data().mapLoad
-    })
+    return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
+      return snapshot.data().mapLoad;
+    });
   }
 
   useEffect(() => {
@@ -85,7 +91,7 @@ export default function MapScreen() {
       })
       .then((array) => {
         setFinalLandmarkArray(array);
-        setIsLoading(false)
+        setIsLoading(false);
       });
   }, [newLandmarkTitle]);
 
@@ -109,10 +115,6 @@ export default function MapScreen() {
       .catch((error) => {
         console.log("error:", error);
       });
-  }
-
-  if (isLoading) {
-    return <Text>Loading...</Text>
   }
 
   return (
