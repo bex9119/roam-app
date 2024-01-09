@@ -26,6 +26,7 @@ export default function MapScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [geoHistory, setGeoHistory] = useState([]);
 
   function loadMaps() {
     return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
@@ -48,6 +49,16 @@ export default function MapScreen() {
               longitude: location.coords.longitude,
             };
             setLocation(newCoordinates);
+
+            setGeoHistory((currGeoHistory) => {
+              const currGeoHash = Geohash.encode(
+                location.latitude,
+                location.longitude,
+                7
+              );
+              if (currGeoHistory) return [...currGeoHistory, geoHistory];
+            });
+
             setLocationHistory((currHistory) => {
               return [...currHistory, newCoordinates];
             });
@@ -139,7 +150,7 @@ export default function MapScreen() {
                 key={`tile${index}`}
                 coordinates={tile.location}
                 fillColor={
-                  tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"
+                  tile.fill ? "rgba(208,208,208,1)" : "rgba(208,208,208,0)"
                 }
                 strokeColor="rgba(0,0,0,0)"
               />

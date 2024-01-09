@@ -1,21 +1,23 @@
 import * as Location from "expo-location";
+const tomLong = -1.56612;
+const tomLat = 53.82441;
 
 const createGrid = () => {
-
-  let longitude = -1.58;
+  let longitude = tomLong - 0.005;
   let longGrid = [];
   let grid = [];
   let tiles = [];
   const longitudeInterval = 0.0025;
   const latitudeInterval = 0.0015;
 
-  while (longitude < -1.48 && longitude >= -1.58) {
+  while (longitude < tomLong + 0.02 && longitude >= tomLong - 0.02) {
     longGrid.push(longitude);
     longitude += longitudeInterval;
   }
+
   longGrid.forEach((long) => {
-    let latitude = 53.78;
-    while (latitude >= 53.78 && latitude < 53.83) {
+    let latitude = tomLat - 0.0025;
+    while (latitude >= tomLat - 0.01 && latitude < tomLat + 0.01) {
       let square = { longitude: long, latitude: null };
       square.latitude = latitude;
       latitude += latitudeInterval;
@@ -40,17 +42,17 @@ const createGrid = () => {
         {
           latitude: latLong.latitude + latitudeInterval,
           longitude: latLong.longitude,
-         },
-       ],
+        },
+      ],
       fill: true,
-       sortLat: [latLong.latitude, latLong.latitude + latitudeInterval],
-       sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
+      sortLat: [latLong.latitude, latLong.latitude + latitudeInterval],
+      sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
     });
   });
-  return tiles
+  return tiles;
 };
 
-function gridSquareId(){
+function gridSquareId() {
   //we want two map collections on firebase
   //one stores map grids
   //other stores locations of users
@@ -59,7 +61,6 @@ function gridSquareId(){
   //also request their history of squares than filter mapgrid to remove any squares of id's in grid array
   //store user history in state for conditional rendering.
   //when user closes app, local state updated to firebase to reflect changes on front end to backend.
-  
 }
 
 export default createGrid;
