@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import SignUp from "./Screens/SignUp";
 import LoginPage from "./Screens/LoginPage";
-import Landmarks from "./Screens/Landmarks";
+import Landmarks from "./Screens/Landmarks";;
 import WhatsLocal from "./Screens/WhatsLocal";
 import { NavigationContainer } from "@react-navigation/native";
 import Routes from "./Screens/Routes";
