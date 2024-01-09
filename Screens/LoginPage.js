@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {StyleSheet, View} from "react-native";
-import { TextInput, Button, Title, Modal, Text} from 'react-native-paper';
+import { TextInput, Button, Title, Modal, Text, Portal} from 'react-native-paper';
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config";
 import { useNavigation } from "@react-navigation/native";
@@ -34,9 +34,8 @@ export default function LoginPage() {
     return (
         <>
         <View style={styles.container}>
-            <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalStyle}>
-            <Text>Invalid User Login</Text>
-            </Modal>
+
+
             <Title>Login</Title>
             
             <TextInput
@@ -57,12 +56,19 @@ export default function LoginPage() {
             />
 
             <Button mode="contained" onPress={handleSubmit} style={styles.button}>
-                Login
+            Login
             </Button>
             <Button mode="contained" onPress={() => {navigation.navigate("Sign-up")}} style={styles.button}>
                 Signup
             </Button>
         </View>
+
+        <Portal>
+            <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalStyle}>
+            <Text>Invalid User Login</Text>
+            </Modal>
+        </Portal>
+
         </>
     );
 }
@@ -84,47 +90,3 @@ const styles = StyleSheet.create({
         padding: 20
     }
 });
-
-// const styles = StyleSheet.create({
-//     // container: {
-//     //     backgroundColor: "black",
-//     //     color: "white",
-//     //     fontSize: 20,
-//     //     alignContent: "space-between",
-//     //     height: 300, 
-//     //     width: 100
-//     // },
-//     textInput: {
-//         backgroundColor: "black",
-//         color: "white",
-//         height: 40,
-//         fontSize: 20,
-//     },
-//     centeredView: {
-//         flex: 1,
-//         justifyContent: "center",
-//         alignItems: "center",
-//         marginTop: 22,
-//     },
-
-//     modalView: {
-//         margin: 20,
-//         backgroundColor: "white",
-//         borderRadius: 20,
-//         padding: 35,
-//         alignItems: "center",
-//         shadowColor: "#000",
-//         shadowOffset: {
-//             width: 0,
-//             height: 2,
-//         },
-//         shadowOpacity: 0.25,
-//         shadowRadius: 4,
-//         elevation: 5,
-//     },
-//     text: { fontSize: 20 },
-//     button: {
-//         padding:10
-//     }
-
-// });
