@@ -3,7 +3,7 @@ import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../config";
 import { useNavigation } from "@react-navigation/core";
 
@@ -13,6 +13,15 @@ export default function MapScreen() {
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
+
+  function loadMaps() {
+    return getDoc(doc(db, 'Maps', 'HJLCbJGvssb2onQTbiy4')).then((snapshot)=> {
+     return snapshot.data().mapLoad
+    })
+  }
+
+
   useEffect(() => {
     const startLocationUpdates = () => {
       Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -81,7 +90,7 @@ export default function MapScreen() {
         longitudeDelta: 0.04,
       }}
       provider="google"
-      googleMapsApiKey="AIzaSyBdvF-tHDZd-CAjetSae6Eut8VL_xrgpMw"
+      googleMapsApiKey={loadMaps()}
       customMapStyle={mapStyle}
     >
       {region.map((tile, index) => {
@@ -92,7 +101,7 @@ export default function MapScreen() {
             fillColor={
               tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"
             }
-            strokeColor="rgba(0,0,0,1)"
+            strokeColor="rgba(0,0,0,0)"
           />
         );
       })}
