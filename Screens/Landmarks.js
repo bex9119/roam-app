@@ -1,11 +1,11 @@
 import {
-  Button,
   Image,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import {Button} from "react-native-paper";
 import { Camera, CameraType } from "expo-camera";
 import { useEffect, useState } from "react";
 import CameraScreen from "./CameraScreen";
@@ -24,26 +24,16 @@ export default function Landmarks({ route, navigation }) {
         <ScrollView>
           <View>
             <Image style={styles.icon} />
-            <Text style={styles.heading}>Landmark</Text>
+            <Text style={styles.heading}></Text>
           </View>
           <View>
-            <Image
-              style={styles.photo}
-              source={{
-                uri: "https://leedsminster.org//wp-content/uploads/2022/04/Minster-NW-View-Adjusted-compressed-scaled.jpg",
-              }}
-            />
-          </View>
-          <View>
-            <Text>Take Photo</Text>
-            <Button
-              onPress={() => {
-                setStartCamera(true);
-              }}
-              title="+"
-            />
-            <CommentsList landmarkId={id} />
             <ImageGallery landmarkId={id} />
+          </View>
+          <View>
+            <Button icon="camera" mode="contained" onPress={() => setStartCamera(true)}>
+            Take Photo
+            </Button>
+            <CommentsList landmarkId={id} />
           </View>
         </ScrollView>
       </View>
@@ -52,7 +42,11 @@ export default function Landmarks({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
   text: {},
   heading: {},
   icon: {},

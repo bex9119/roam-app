@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text } from "react-native";
 import { db } from "../../config";
 import { View } from "react-native-animatable";
+import Swiper from 'react-native-swiper';
+
+
 
 export default function ImageGallery({ landmarkId }) {
   const [landmarkImages, setLandmarkImages] = useState([]);
@@ -25,7 +28,14 @@ export default function ImageGallery({ landmarkId }) {
   }
   return (
     <View>
-      {landmarkImages.map((image, index) => {
+      <Swiper style={styles.wrapper} showsButtons={true}>
+        {landmarkImages.map((image, index) => (
+          <View key={index} style={styles.slide}>
+            <Image source={{ uri: image.doc.data.value.mapValue.fields.image_url.stringValue }} style={styles.image} />
+          </View>
+        ))}
+      </Swiper>
+      {/* {landmarkImages.map((image, index) => {
         return (
           <Image
             style={styles.photo}
@@ -35,11 +45,20 @@ export default function ImageGallery({ landmarkId }) {
             key={index}
           />
         );
-      })}
+      })} */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  photo: { width: "100%", height: 200 },
+  wrapper: {},
+  slide: {
+    flex: 5,
+    alignItems: "center"
+
+  },
+  image: {
+    width: '100%',
+    height: '60%',
+  }
 });
