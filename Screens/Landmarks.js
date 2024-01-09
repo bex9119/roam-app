@@ -5,7 +5,9 @@ import CameraScreen from "./CameraScreen";
 import CommentsList from "./components/CommentsList";
 // const { id } = route.params;
 
-export default function Landmarks() {
+export default function Landmarks({route, navigation}) {
+    const {id} = route.params
+    console.log(id, 'landmark id') 
   const [startCamera, setStartCamera] = useState(false);
 
   if (startCamera) {

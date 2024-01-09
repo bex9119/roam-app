@@ -3,19 +3,22 @@ import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, GeoPoint } from "firebase/firestore";
 import { db } from "../config";
 import Modal from "react-native-modal"
+// import  useNavigation  from “@react-navigation/core”
 import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
   const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
   const [addButtonClicked, setAddButtonClicked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newLandmarkTitle, setNewLandmarkTitle] = useState('')
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -80,6 +83,24 @@ export default function MapScreen() {
     setAddButtonClicked(true);
     setIsModalVisible(true);
   }
+
+  function submitLandmark() {
+    const landmarksCollection = collection(db, 'Landmarks')
+    const landmarkData = {
+      Title: newLandmarkTitle,
+      Coordinate: new GeoPoint(location.latitude, location.longitude)
+    }
+    addDoc(landmarksCollection, landmarkData)
+      .then((data) => {
+        console.log(data.id, 'firebase response')
+        setNewLandmarkTitle("")
+        navigation.navigate("Landmarks", { id: data.id });
+      })
+      .catch((error) => {
+        console.log("error:", error);
+      });
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
@@ -111,16 +132,16 @@ export default function MapScreen() {
           {location && (
             <Polyline coordinates={locationHistory} strokeWidth={5} />
           )}
-          {addButtonClicked && (
+          {/* {addButtonClicked && (
             <Marker
               coordinate={{
                 latitude: location.latitude,
                 longitude: location.longitude,
               }}
             />
-          )}
+          )} */}
 
-          {finalLandmarkArray.map((data) => (
+          {finalLandmarkArray.map((data, index) => (
             <Marker
               onPress={() => {
                 {
@@ -129,7 +150,7 @@ export default function MapScreen() {
                   // navigation.navigate("Landmark", { id: data.id });
                 }
               }}
-              key={data.id}
+              key={index}
               coordinate={{
                 latitude: data.Coordinate._lat,
                 longitude: data.Coordinate._long,
@@ -147,10 +168,11 @@ export default function MapScreen() {
               <TextInput
                 placeholder="What Landmark is this?"
                 style={styles.textInput}
+                onChangeText={(title) => setNewLandmarkTitle(title)}
               />
-            <Pressable style={styles.addPinButton} onPress={submitLandmark}>
-              <Text>Submit</Text>
-            </Pressable>
+              <Pressable style={styles.addPinButton} onPress={submitLandmark}>
+                <Text>Submit</Text>
+              </Pressable>
             </View>
           </Modal>
         </View>
