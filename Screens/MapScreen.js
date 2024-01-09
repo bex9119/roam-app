@@ -3,11 +3,17 @@ import MapView, { Polyline, Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import { addDoc, collection, getDocs, GeoPoint } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  GeoPoint,
+} from "firebase/firestore";
 import { db } from "../config";
 import Modal from "react-native-modal";
 import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
-// import { useNavigation } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/core";
 
 export default function MapScreen() {
@@ -19,6 +25,13 @@ export default function MapScreen() {
   const [addButtonClicked, setAddButtonClicked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  function loadMaps() {
+    return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
+      return snapshot.data().mapLoad;
+    });
+  }
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -44,6 +57,7 @@ export default function MapScreen() {
     };
     startLocationUpdates();
   }, []);
+
   useEffect(() => {
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
@@ -77,6 +91,7 @@ export default function MapScreen() {
       })
       .then((array) => {
         setFinalLandmarkArray(array);
+        setIsLoading(false);
       });
   }, [newLandmarkTitle]);
 
@@ -106,7 +121,7 @@ export default function MapScreen() {
     <View style={styles.container}>
       <View style={styles.mapView}>
         <MapView
-          minZoomLevel={7}
+          minZoomLevel={15}
           style={{ flex: 1, height: "100%" }}
           initialRegion={{
             latitude: 53.8,
@@ -115,7 +130,7 @@ export default function MapScreen() {
             longitudeDelta: 0.04,
           }}
           provider="google"
-          googleMapsApiKey="AIzaSyBdvF-tHDZd-CAjetSae6Eut8VL_xrgpMw"
+          googleMapsApiKey={loadMaps}
           customMapStyle={mapStyle}
         >
           {region.map((tile, index) => {
@@ -126,7 +141,7 @@ export default function MapScreen() {
                 fillColor={
                   tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"
                 }
-                strokeColor="rgba(0,0,0,1)"
+                strokeColor="rgba(0,0,0,0)"
               />
             );
           })}
