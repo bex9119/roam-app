@@ -5,7 +5,7 @@ import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
 import { addDoc, collection, getDocs, GeoPoint } from "firebase/firestore";
 import { db } from "../config";
-import Modal from "react-native-modal"
+import Modal from "react-native-modal";
 import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
 // import { useNavigation } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/core";
@@ -18,7 +18,7 @@ export default function MapScreen() {
   const navigation = useNavigation();
   const [addButtonClicked, setAddButtonClicked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newLandmarkTitle, setNewLandmarkTitle] = useState('')
+  const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -69,15 +69,16 @@ export default function MapScreen() {
     getDocs(collection(db, "Landmarks"))
       .then((querySnapshot) => {
         querySnapshot.forEach((landmarkData) => {
-          landmarkArray.push(landmarkData.data());
-          console.log(landmarkData.id, 'landmark id')
+          const landmarkDataObject = landmarkData.data();
+          landmarkDataObject.id = landmarkData.id;
+          landmarkArray.push(landmarkDataObject);
         });
         return landmarkArray;
       })
       .then((array) => {
         setFinalLandmarkArray(array);
       });
-  }, []);
+  }, [newLandmarkTitle]);
 
   function addPinFunction() {
     setAddButtonClicked(true);
@@ -85,16 +86,16 @@ export default function MapScreen() {
   }
 
   function submitLandmark() {
-    const landmarksCollection = collection(db, 'Landmarks')
+    const landmarksCollection = collection(db, "Landmarks");
     const landmarkData = {
       Title: newLandmarkTitle,
-      Coordinate: new GeoPoint(location.latitude, location.longitude)
-    }
+      Coordinate: new GeoPoint(location.latitude, location.longitude),
+    };
     addDoc(landmarksCollection, landmarkData)
       .then((data) => {
-        console.log(data.id, 'firebase response')
-        setNewLandmarkTitle("")
+        setNewLandmarkTitle("");
         navigation.navigate("Landmarks", { id: data.id });
+        setIsModalVisible(false);
       })
       .catch((error) => {
         console.log("error:", error);
@@ -132,22 +133,12 @@ export default function MapScreen() {
           {location && (
             <Polyline coordinates={locationHistory} strokeWidth={5} />
           )}
-          {/* {addButtonClicked && (
-            <Marker
-              coordinate={{
-                latitude: location.latitude,
-                longitude: location.longitude,
-              }}
-            />
-          )} */}
 
           {finalLandmarkArray.map((data, index) => (
             <Marker
               onPress={() => {
                 {
-                  console.log("marker clicked");
-                  console.log(data.id, "index");
-                  // navigation.navigate("Landmark", { id: data.id });
+                  navigation.navigate("Landmarks", { id: data.id });
                 }
               }}
               key={index}
@@ -163,7 +154,7 @@ export default function MapScreen() {
       </View>
       {addButtonClicked && (
         <View style={styles.separator}>
-          <Modal isVisible={true}>
+          <Modal isVisible={isModalVisible}>
             <View style={styles.modal}>
               <TextInput
                 placeholder="What Landmark is this?"
@@ -185,6 +176,11 @@ export default function MapScreen() {
   );
 }
 
+// <Image
+// source="require(../../../assets/cyclist-icon.png)"
+// style={styles.markerImage}
+// />
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -205,8 +201,8 @@ const styles = StyleSheet.create({
     borderColor: "#f0f0f0",
     backgroundColor: "#2596be",
     width: "50%",
-    alignItems: 'center',
-marginLeft: '25%'
+    alignItems: "center",
+    marginLeft: "25%",
   },
   modal: {
     backgroundColor: "#ffffff",
@@ -223,6 +219,6 @@ marginLeft: '25%'
     borderRadius: 25,
     borderWidth: 1,
     borderColor: "#ffffff",
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });
