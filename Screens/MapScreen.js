@@ -19,7 +19,6 @@ export default function MapScreen() {
   const [addButtonClicked, setAddButtonClicked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
-
   const [isLoading, setIsLoading] = useState(true);
 
   function loadMaps() {
@@ -27,7 +26,6 @@ export default function MapScreen() {
      return snapshot.data().mapLoad
     })
   }
-
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -53,6 +51,7 @@ export default function MapScreen() {
     };
     startLocationUpdates();
   }, []);
+
   useEffect(() => {
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
@@ -86,6 +85,7 @@ export default function MapScreen() {
       })
       .then((array) => {
         setFinalLandmarkArray(array);
+        setIsLoading(false)
       });
   }, [newLandmarkTitle]);
 
@@ -111,11 +111,15 @@ export default function MapScreen() {
       });
   }
 
+  if (isLoading) {
+    return <Text>Loading...</Text>
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.mapView}>
         <MapView
-          minZoomLevel={7}
+          minZoomLevel={15}
           style={{ flex: 1, height: "100%" }}
           initialRegion={{
             latitude: 53.8,
