@@ -1,4 +1,5 @@
 import * as Location from "expo-location";
+//top left corner
 const startLong = -1.59612;
 const startLat = 53.8;
 
@@ -9,13 +10,14 @@ const createGrid = () => {
   let tiles = [];
   const longitudeInterval = 0.001;
   const latitudeInterval = 0.00066;
-
+// more negative (smaller number) moves grid left
   while (longitude < startLong + 0.05 && longitude >= startLong) {
     longGrid.push(longitude);
     longitude += longitudeInterval;
   }
 
   longGrid.forEach((long) => {
+    //up or down, larger number moves grid up
     let latitude = startLat;
     while (latitude >= startLat && latitude < startLat + 0.03) {
       let square = { longitude: long, latitude: null };

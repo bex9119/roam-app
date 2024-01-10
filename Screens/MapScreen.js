@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../config";
 import Modal from "react-native-modal";
-import { Pressable, Text, View, StyleSheet, TextInput, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Pressable, Text, View, StyleSheet, TextInput, Image, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 
 export default function MapScreen() {
@@ -25,7 +25,6 @@ export default function MapScreen() {
   const [addButtonClicked, setAddButtonClicked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
-  const [geoHistory, setGeoHistory] = useState([]);
   const [loadingModal, setLoadingModal] = useState(true)
 
   function loadMaps() {
@@ -42,33 +41,22 @@ export default function MapScreen() {
           return "error";
         }
         return Location.watchPositionAsync(
-          { accuracy: Location.Accuracy.Highest, timeInterval: 2000 },
-          (location) => {
+          { accuracy: Location.Accuracy.Highest, timeInterval: 10000 },
+          (movedLocation) => {
             const newCoordinates = {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
+              latitude: movedLocation.coords.latitude,
+              longitude: movedLocation.coords.longitude,
             };
-            setLocation(newCoordinates);
-
-            // setGeoHistory((currGeoHistory) => {
-            //   const currGeoHash = Geohash.encode(
-            //     location.latitude,
-            //     location.longitude,
-            //     7
-            //   );
-            //   if (currGeoHistory) return [...currGeoHistory, geoHistory];
-            // });
-
+            setLocation(newCoordinates);   
             setLocationHistory((currHistory) => {
-              return [...currHistory, newCoordinates];
-            });
-          }
-        );
-      });
-    };
-    startLocationUpdates();
-  }, []);
-
+                return [...currHistory, newCoordinates];
+              });
+            }
+            );
+          });
+        };
+        startLocationUpdates();
+      }, []);
 
   useEffect(() => {
     setRegion((currRegion) => {
@@ -130,7 +118,7 @@ export default function MapScreen() {
   }
 
     const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
-    delay(5000).then(() => setLoadingModal(false));
+    delay(2000).then(() => setLoadingModal(false));
 
 return (
   <View style={styles.container}>
