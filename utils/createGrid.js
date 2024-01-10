@@ -1,21 +1,25 @@
 import * as Location from "expo-location";
+//top left corner
+const startLong = -1.59612;
+const startLat = 53.8;
 
 const createGrid = () => {
-
-  let longitude = -1.58;
+  let longitude = startLong;
   let longGrid = [];
   let grid = [];
   let tiles = [];
-  const longitudeInterval = 0.0025;
-  const latitudeInterval = 0.0015;
-
-  while (longitude < -1.48 && longitude >= -1.58) {
+  const longitudeInterval = 0.001;
+  const latitudeInterval = 0.00066;
+// more negative (smaller number) moves grid left
+  while (longitude < startLong + 0.05 && longitude >= startLong) {
     longGrid.push(longitude);
     longitude += longitudeInterval;
   }
+
   longGrid.forEach((long) => {
-    let latitude = 53.78;
-    while (latitude >= 53.78 && latitude < 53.83) {
+    //up or down, larger number moves grid up
+    let latitude = startLat;
+    while (latitude >= startLat && latitude < startLat + 0.03) {
       let square = { longitude: long, latitude: null };
       square.latitude = latitude;
       latitude += latitudeInterval;
@@ -40,17 +44,17 @@ const createGrid = () => {
         {
           latitude: latLong.latitude + latitudeInterval,
           longitude: latLong.longitude,
-         },
-       ],
+        },
+      ],
       fill: true,
-       sortLat: [latLong.latitude, latLong.latitude + latitudeInterval],
-       sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
+      sortLat: [latLong.latitude, latLong.latitude + latitudeInterval],
+      sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
     });
   });
-  return tiles
+  return tiles;
 };
 
-function gridSquareId(){
+function gridSquareId() {
   //we want two map collections on firebase
   //one stores map grids
   //other stores locations of users
@@ -59,7 +63,6 @@ function gridSquareId(){
   //also request their history of squares than filter mapgrid to remove any squares of id's in grid array
   //store user history in state for conditional rendering.
   //when user closes app, local state updated to firebase to reflect changes on front end to backend.
-  
 }
 
 export default createGrid;
