@@ -7,21 +7,27 @@ import { NavigationContainer } from "@react-navigation/native";
 import Routes from "./Screens/Routes";
 import MapScreen from "./Screens/MapScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { PaperProvider } from 'react-native-paper';
+import { useState } from "react";
 
 export default function App() {
   const Tab = createBottomTabNavigator();
 
+  const [currentLandmark, setCurrentLandmark] = useState()
+
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Login" component={LoginPage} />
-        <Tab.Screen name="Sign-up" component={SignUp} />
-        <Tab.Screen name="MapScreen" component={MapScreen} />
-        <Tab.Screen name="Landmarks" component={Landmarks} />
-        <Tab.Screen name="Routes" component={Routes} />
-        <Tab.Screen name="What's Local?" component={WhatsLocal} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Login" component={LoginPage} options={{headerShown: true, title: 'Home'}} />
+          <Tab.Screen name="Sign-up" component={SignUp} options={{headerShown: false}} />
+          <Tab.Screen name="MapScreen" component={MapScreen} options={{headerShown: false}} />
+          <Tab.Screen name="Landmarks" component={Landmarks} options={{headerShown: true, title: currentLandmark}}  initialParams={{ currentLandmark, setCurrentLandmark }}/>
+          <Tab.Screen name="Routes" component={Routes} options={{headerShown: false}} />
+          <Tab.Screen name="What's Local?" component={WhatsLocal} options={{headerShown: false}} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 

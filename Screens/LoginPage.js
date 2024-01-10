@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, TextInput, View, Text, StyleSheet } from "react-native";
+import {StyleSheet, View} from "react-native";
+import { TextInput, Button, Title, Modal, Text, Portal} from 'react-native-paper';
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config";
 import { useNavigation } from "@react-navigation/native";
@@ -8,6 +9,7 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [visible, setVisbile] = useState(false);
     const navigation = useNavigation()
 
     function handleSubmit() {
@@ -17,77 +19,74 @@ export default function LoginPage() {
             navigation.navigate('MapScreen')
         })
         .catch((error) => {
-            console.log(error);
+            showModal();
         });
+    }
+
+    function showModal(){
+        setVisbile(true);
+    }
+
+    function hideModal(){
+        setVisbile(false);
     }
 
     return (
         <>
-            <View>
-                <Text style={styles.text}>email</Text>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Type your email..."
-                    onChangeText={(newText) => setEmail(newText)}
-                    defaultValue={email}
-                />
-                <Text style={styles.text}>password</Text>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Type your password..."
-                    onChangeText={(newText) => setPassword(newText)}
-                    defaultValue={password}
-                />
-            </View>
-            <View>
-                <Button
-                    style={styles.button}
-                    disabled={buttonDisabled}
-                    title="submit"
-                    onPress={handleSubmit}
-                />
-                <Button title="Sign-up" onPress={()=> {navigation.navigate('Sign-up')}}/>
-            </View>
+        <View style={styles.container}>
+
+
+            <Title>Login</Title>
+            
+            <TextInput
+                label="Email"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                mode="outlined"
+                style={styles.input}
+            />
+
+            <TextInput
+                label="Password"
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                secureTextEntry
+                mode="outlined"
+                style={styles.input}
+            />
+
+            <Button mode="contained" onPress={handleSubmit} style={styles.button}>
+            Login
+            </Button>
+            <Button mode="contained" onPress={() => {navigation.navigate("Sign-up")}} style={styles.button}>
+                Signup
+            </Button>
+        </View>
+
+        <Portal>
+            <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalStyle}>
+            <Text>Invalid User Login</Text>
+            </Modal>
+        </Portal>
+
         </>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 5,
-        backgroundColor: "black",
-        color: "white",
-        fontSize: 20,
-        alignContent: "space-between",
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: 16,
     },
-    textInput: {
-        backgroundColor: "black",
-        color: "white",
-        height: 40,
-        fontSize: 20,
+    input: {
+      marginVertical: 8,
     },
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22,
+    button: {
+      marginTop: 16,
     },
-
-    modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    text: { fontSize: 20 },
-    button: { margin: 10 },
+    modalStyle : {
+        backgroundColor: 'white',
+        padding: 20
+    }
 });
