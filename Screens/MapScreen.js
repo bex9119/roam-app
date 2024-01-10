@@ -26,7 +26,7 @@ const customPin = "../assets/re-sized-landmark-pin.png";
 import { Button, TextInput } from "react-native-paper";
 import { getAuth } from "firebase/auth";
 
-export default function MapScreen({route}) {
+export default function MapScreen({ route }) {
   const [location, setLocation] = useState({});
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
@@ -35,7 +35,7 @@ export default function MapScreen({route}) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [loadingModal, setLoadingModal] = useState(true);
-  const {currentUser, setCurrentUser} = route.params
+  const { currentUser, setCurrentUser } = route.params;
 
   function loadMaps() {
     return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
@@ -43,11 +43,11 @@ export default function MapScreen({route}) {
     });
   }
 
-  setCurrentUser(getAuth().currentUser.displayName)
+  // setCurrentUser(getAuth().currentUser.displayName);
 
-  if (!getAuth().currentUser) {
-    navigation.navigate('loginPage')
-  }
+  // if (!getAuth().currentUser) {
+  //   navigation.navigate("loginPage");
+  // }
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -180,7 +180,7 @@ export default function MapScreen({route}) {
                 key={`tile${index}`}
                 coordinates={tile.location}
                 fillColor={
-                  tile.fill ? "rgba(208,208,208,1)" : "rgba(208,208,208,0)"
+                  tile.fill ? "rgba(208,208,208,0.8)" : "rgba(208,208,208,0)"
                 }
                 strokeColor="rgba(0,0,0,0)"
               />
@@ -205,32 +205,39 @@ export default function MapScreen({route}) {
             />
           ))}
         </MapView>
-        </View>
-        <View style={styles.separator}>
-          <Modal isVisible={isModalVisible}>
-              <View style={styles.modal}>
-                <TextInput
-                  placeholder="What is this Landmark?"
-                  style={styles.textInput}
-                  onChangeText={(title) => setNewLandmarkTitle(title)}
-                />
-                <Button onPress={submitLandmark}>
-                  <Text>Create Landmark</Text>
-                </Button>
-                <Button onPress={() => {setIsModalVisible(false)}}>
-                  <Text>Close</Text>
-                </Button>
-              </View>
-          </Modal>
-        </View>
-          <Button mode="contained" style={{marginTop: -30, marginHorizontal: 10}} onPress={addPinFunction}>
-          <Text>Add a new landmark</Text>
-          </Button>
+      </View>
+      <View style={styles.separator}>
+        <Modal isVisible={isModalVisible}>
+          <View style={styles.modal}>
+            <TextInput
+              placeholder="What is this Landmark?"
+              style={styles.textInput}
+              onChangeText={(title) => setNewLandmarkTitle(title)}
+            />
+            <Button onPress={submitLandmark}>
+              <Text style={styles.modalText}>Create Landmark</Text>
+            </Button>
+            <Button
+              onPress={() => {
+                setIsModalVisible(false);
+              }}
+            >
+              <Text style={styles.modalText}>Close</Text>
+            </Button>
+          </View>
+        </Modal>
+      </View>
+      <Button
+        mode="contained"
+        style={styles.addPinButton}
+        onPress={addPinFunction}
+      >
+        <Text>Add a new landmark</Text>
+      </Button>
 
       {/* <Pressable style={styles.addPinButton} onPress={addPinFunction}>
         <Text>Add a new landmark</Text>
       </Pressable> */}
-
     </View>
   );
 }
@@ -238,7 +245,7 @@ export default function MapScreen({route}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 10
+    marginBottom: 10,
   },
   separator: {
     marginVertical: 30,
@@ -248,24 +255,27 @@ const styles = StyleSheet.create({
   mapView: {
     height: "90%",
     width: "100%",
+    // borderWidth: 10,
+    // borderColor: "#42618d",
   },
   addPinButton: {
-    padding: 10,
-    margin: 10,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "#f0f0f0",
-    backgroundColor: "#2596be",
-    width: "50%",
+    backgroundColor: "#42618d",
+    width: "80%",
     alignItems: "center",
-    marginLeft: "25%",
+    marginTop: -50,
+    marginHorizontal: 40,
   },
   modal: {
     backgroundColor: "#ffffff",
+    color: "#42618d",
     borderRadius: 25,
     borderWidth: 1,
     borderColor: "#000",
     borderStyle: "solid",
     height: "20%",
+    padding: 20,
+    paddingTop: 10,
   },
   textInput: {
     backgroundColor: "white",
@@ -275,6 +285,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ffffff",
     justifyContent: "center",
+    alignContent: "center",
+  },
+  modalText: {
+    color: "#42618d",
   },
   text: {
     color: "white",
