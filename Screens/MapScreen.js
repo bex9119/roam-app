@@ -1,27 +1,47 @@
 import React, { useEffect, useState } from "react";
-import MapView, { Polyline, Polygon, Marker } from "../setup/map";
+import MapView, { Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import { addDoc, collection, getDocs, GeoPoint } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  GeoPoint,
+} from "firebase/firestore";
 import { db } from "../config";
 import Modal from "react-native-modal";
-import { Pressable, Text, View, StyleSheet } from "react-native";
+import {
+  Pressable,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { useNavigation } from "@react-navigation/core";
+const customPin = "../assets/re-sized-landmark-pin.png";
 import { Button, TextInput } from "react-native-paper";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { getAuth } from "firebase/auth";
 
 export default function MapScreen({route}) {
   const [location, setLocation] = useState({});
-  const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
   const navigation = useNavigation();
   const [addButtonClicked, setAddButtonClicked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
+  const [loadingModal, setLoadingModal] = useState(true);
   const {currentUser, setCurrentUser} = route.params
+
+  function loadMaps() {
+    return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
+      return snapshot.data().mapLoad;
+    });
+  }
 
   setCurrentUser(getAuth().currentUser.displayName)
 
@@ -37,22 +57,20 @@ export default function MapScreen({route}) {
           return "error";
         }
         return Location.watchPositionAsync(
-          { accuracy: Location.Accuracy.Highest, timeInterval: 5000 },
-          (location) => {
+          { accuracy: Location.Accuracy.Highest, timeInterval: 2000 },
+          (movedLocation) => {
             const newCoordinates = {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
+              latitude: movedLocation.coords.latitude,
+              longitude: movedLocation.coords.longitude,
             };
             setLocation(newCoordinates);
-            setLocationHistory((currHistory) => {
-              return [...currHistory, newCoordinates];
-            });
           }
         );
       });
     };
     startLocationUpdates();
   }, []);
+
   useEffect(() => {
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
@@ -110,22 +128,51 @@ export default function MapScreen({route}) {
         console.log("error:", error);
       });
   }
+  const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
+  delay(5000).then(() => setLoadingModal(false));
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
+        <Modal
+          isVisible={loadingModal}
+          transparent={false}
+          style={styles.content}
+        >
+          <View>
+            <Image
+              source={require("../assets/Landmark.png")}
+              style={{
+                height: 200,
+                width: 100,
+                padding: 75,
+              }}
+            />
+            <ActivityIndicator size="large" style={{ padding: 30 }} />
+            <Text style={styles.text}>Explore your local area</Text>
+            <Text style={styles.text}>Discover new places</Text>
+            <Text style={styles.text}>Share your favourite spots</Text>
+          </View>
+        </Modal>
+      </View>
       <View style={styles.mapView}>
         <MapView
-          minZoomLevel={7}
+          minZoomLevel={15}
           style={{ flex: 1, height: "100%" }}
-          initialRegion={{
-            latitude: 53.8,
-            longitude: -1.54,
+          region={{
+            latitude: 53.82,
+            longitude: -1.58,
             latitudeDelta: 0.09,
             longitudeDelta: 0.04,
           }}
           provider="google"
-          googleMapsApiKey="AIzaSyBdvF-tHDZd-CAjetSae6Eut8VL_xrgpMw"
+          googleMapsApiKey={loadMaps}
           customMapStyle={mapStyle}
+          showsUserLocation={true}
         >
           {region.map((tile, index) => {
             return (
@@ -133,15 +180,12 @@ export default function MapScreen({route}) {
                 key={`tile${index}`}
                 coordinates={tile.location}
                 fillColor={
-                  tile.fill ? "rgba(105,105,105,1)" : "rgba(105,105,105,0)"
+                  tile.fill ? "rgba(208,208,208,1)" : "rgba(208,208,208,0)"
                 }
-                strokeColor="rgba(0,0,0,1)"
+                strokeColor="rgba(0,0,0,0)"
               />
             );
           })}
-          {location && (
-            <Polyline coordinates={locationHistory} strokeWidth={5} />
-          )}
 
           {finalLandmarkArray.map((data, index) => (
             <Marker
@@ -157,6 +201,7 @@ export default function MapScreen({route}) {
               }}
               title={`${data.Title}`}
               description={`${data.Description}`}
+              image={require(customPin)}
             />
           ))}
         </MapView>
@@ -189,11 +234,6 @@ export default function MapScreen({route}) {
     </View>
   );
 }
-
-// <Image
-// source="require(../../../assets/cyclist-icon.png)"
-// style={styles.markerImage}
-// />
 
 const styles = StyleSheet.create({
   container: {
@@ -234,6 +274,14 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     borderColor: "#ffffff",
+    justifyContent: "center",
+  },
+  text: {
+    color: "white",
+    lineHeight: 40,
+  },
+  content: {
+    alignItems: "center",
     justifyContent: "center",
   },
 });

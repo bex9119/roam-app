@@ -23,22 +23,19 @@ export default function Landmarks({ route }) {
 
   const [coverImage, setCoverImage] = useState(null)
   useEffect(() => {
-      const q = query(
-      collection(db, "images"),
-      where("landmarkId", "==", id)
-      );
-      getDocs(q)
+    const q = query(collection(db, "images"), where("landmarkId", "==", id));
+    getDocs(q)
       .then((snapshot) => {
         let image = [];
         snapshot.forEach((imageData) => {
-          image.push(imageData.data().image_url)
+          image.push(imageData.data().image_url);
         });
-        return image[0]
+        return image[0];
       })
       .then((image) => {
         setCoverImage(image);
       });
-  }, [id])
+  }, [id, startCamera])
 
   useEffect(() => {
     const docRef = doc(db, "Landmarks", id);
@@ -61,7 +58,8 @@ export default function Landmarks({ route }) {
                 source={{
                   uri: coverImage,
                 }}
-              />}
+              />
+            }
           </View>
           <View>
             <Button icon="camera" style={{marginTop: 25, marginHorizontal: 20}} mode="contained" onPress={() => setStartCamera(true)}>
