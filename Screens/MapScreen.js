@@ -6,9 +6,10 @@ import mapStyle from "../assets/mapStyle.json";
 import { addDoc, collection, getDocs, GeoPoint } from "firebase/firestore";
 import { db } from "../config";
 import Modal from "react-native-modal";
-import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
-// import { useNavigation } from "@react-navigation/native";
+import { Pressable, Text, View, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import { Button, TextInput } from "react-native-paper";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
@@ -151,27 +152,32 @@ export default function MapScreen() {
             />
           ))}
         </MapView>
-      </View>
-      {addButtonClicked && (
+        </View>
         <View style={styles.separator}>
           <Modal isVisible={isModalVisible}>
-            <View style={styles.modal}>
-              <TextInput
-                placeholder="What Landmark is this?"
-                style={styles.textInput}
-                onChangeText={(title) => setNewLandmarkTitle(title)}
-              />
-              <Pressable style={styles.addPinButton} onPress={submitLandmark}>
-                <Text>Submit</Text>
-              </Pressable>
-            </View>
+              <View style={styles.modal}>
+                <TextInput
+                  placeholder="What is this Landmark?"
+                  style={styles.textInput}
+                  onChangeText={(title) => setNewLandmarkTitle(title)}
+                />
+                <Button onPress={submitLandmark}>
+                  <Text>Submit</Text>
+                </Button>
+                <Button onPress={() => {setIsModalVisible(false)}}>
+                  <Text>Close</Text>
+                </Button>
+              </View>
           </Modal>
+          <Button mode="contained" style={{marginBottom: 20}} onPress={addPinFunction}>
+          <Text>Add a new landmark</Text>
+          </Button>
         </View>
-      )}
 
-      <Pressable style={styles.addPinButton} onPress={addPinFunction}>
+      {/* <Pressable style={styles.addPinButton} onPress={addPinFunction}>
         <Text>Add a new landmark</Text>
-      </Pressable>
+      </Pressable> */}
+
     </View>
   );
 }
@@ -195,7 +201,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   addPinButton: {
-    padding: 20,
+    padding: 10,
     margin: 10,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#f0f0f0",

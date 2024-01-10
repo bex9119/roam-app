@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {StyleSheet, View} from "react-native";
+import {Pressable, StyleSheet, View} from "react-native";
 import { TextInput, Button, Title, Modal, Text, Portal} from 'react-native-paper';
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config";
@@ -58,9 +58,9 @@ export default function LoginPage() {
             <Button mode="contained" onPress={handleSubmit} style={styles.button}>
             Login
             </Button>
-            <Button mode="contained" onPress={() => {navigation.navigate("Sign-up")}} style={styles.button}>
-                Signup
-            </Button>
+            <Pressable style={{marginTop: 30, alignItems: "center" }} onPress={() => {navigation.navigate("Sign-up")}}>
+                <Text>Click here if you want to Sign up</Text>
+            </Pressable>
         </View>
 
         <Portal>
