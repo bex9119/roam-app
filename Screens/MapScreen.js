@@ -18,14 +18,15 @@ import {
   Text,
   View,
   StyleSheet,
-  TextInput,
   Image,
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 const customPin = "../assets/re-sized-landmark-pin.png";
+import { Button, TextInput } from "react-native-paper";
+import { getAuth } from "firebase/auth";
 
-export default function MapScreen() {
+export default function MapScreen({route}) {
   const [location, setLocation] = useState({});
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
@@ -34,11 +35,18 @@ export default function MapScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [loadingModal, setLoadingModal] = useState(true);
+  const {currentUser, setCurrentUser} = route.params
 
   function loadMaps() {
     return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
       return snapshot.data().mapLoad;
     });
+  }
+
+  setCurrentUser(getAuth().currentUser.displayName)
+
+  if (!getAuth().currentUser) {
+    navigation.navigate('loginPage')
   }
 
   useEffect(() => {
@@ -197,27 +205,32 @@ export default function MapScreen() {
             />
           ))}
         </MapView>
-      </View>
-      {addButtonClicked && (
+        </View>
         <View style={styles.separator}>
           <Modal isVisible={isModalVisible}>
-            <View style={styles.modal}>
-              <TextInput
-                placeholder="What Landmark is this?"
-                style={styles.textInput}
-                onChangeText={(title) => setNewLandmarkTitle(title)}
-              />
-              <Pressable style={styles.addPinButton} onPress={submitLandmark}>
-                <Text>Submit</Text>
-              </Pressable>
-            </View>
+              <View style={styles.modal}>
+                <TextInput
+                  placeholder="What is this Landmark?"
+                  style={styles.textInput}
+                  onChangeText={(title) => setNewLandmarkTitle(title)}
+                />
+                <Button onPress={submitLandmark}>
+                  <Text>Create Landmark</Text>
+                </Button>
+                <Button onPress={() => {setIsModalVisible(false)}}>
+                  <Text>Close</Text>
+                </Button>
+              </View>
           </Modal>
         </View>
-      )}
+          <Button mode="contained" style={{marginTop: -30, marginHorizontal: 10}} onPress={addPinFunction}>
+          <Text>Add a new landmark</Text>
+          </Button>
 
-      <Pressable style={styles.addPinButton} onPress={addPinFunction}>
+      {/* <Pressable style={styles.addPinButton} onPress={addPinFunction}>
         <Text>Add a new landmark</Text>
-      </Pressable>
+      </Pressable> */}
+
     </View>
   );
 }
@@ -225,7 +238,7 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 1)",
+    marginBottom: 10
   },
   separator: {
     marginVertical: 30,
@@ -237,7 +250,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   addPinButton: {
-    padding: 20,
+    padding: 10,
     margin: 10,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#f0f0f0",

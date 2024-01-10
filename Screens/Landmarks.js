@@ -1,24 +1,27 @@
 import {
-  Button,
   Image,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import {Button, Title} from "react-native-paper";
 import { Camera, CameraType } from "expo-camera";
 import { useEffect, useState } from "react";
 import CameraScreen from "./CameraScreen";
 import CommentsList from "./components/CommentsList";
 import ImageGallery from "./components/ImageGallery";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../config";
 
-export default function Landmarks({ route, navigation }) {
-  const { id } = route.params;
-  const [startCamera, setStartCamera] = useState(false);
-  const [coverImage, setCoverImage] = useState(null);
 
+
+export default function Landmarks({ route }) {
+  const { id, currentLandmark, setCurrentLandmark } = route.params;
+  const [startCamera, setStartCamera] = useState(false);
+  const [landmarkTitle, setLandmarkTitle] = useState("");
+
+  const [coverImage, setCoverImage] = useState(null)
   useEffect(() => {
     const q = query(collection(db, "images"), where("landmarkId", "==", id));
     getDocs(q)
@@ -32,7 +35,15 @@ export default function Landmarks({ route, navigation }) {
       .then((image) => {
         setCoverImage(image);
       });
-  }, [id, startCamera]);
+  }, [id, startCamera])
+
+  useEffect(() => {
+    const docRef = doc(db, "Landmarks", id);
+    getDoc(docRef)
+    .then((snapshot) => {
+      setCurrentLandmark(snapshot.data().Title)
+    })
+  }, [id])
 
   if (startCamera) {
     return <CameraScreen landmarkId={id} setStartCamera={setStartCamera} />;
@@ -40,30 +51,24 @@ export default function Landmarks({ route, navigation }) {
     return (
       <View style={styles.container}>
         <ScrollView>
-          <View>
-            <Image style={styles.icon} />
-            <Text style={styles.heading}>Landmark</Text>
-          </View>
-          <View>
-            {coverImage && (
+          <View style={{marginHorizontal: 0}}>
+            {coverImage &&
               <Image
                 style={styles.photo}
                 source={{
                   uri: coverImage,
                 }}
               />
-            )}
+            }
           </View>
           <View>
-            <Text>Take Photo</Text>
-            <Button
-              onPress={() => {
-                setStartCamera(true);
-              }}
-              title="+"
-            />
+            <Button icon="camera" style={{marginTop: 25, marginHorizontal: 20}} mode="contained" onPress={() => setStartCamera(true)}>
+            Take Photo
+            </Button>
+            <ImageGallery landmarkId={id}/>
+          </View>
+          <View>
             <CommentsList landmarkId={id} />
-            <ImageGallery landmarkId={id} />
           </View>
         </ScrollView>
       </View>
@@ -72,9 +77,18 @@ export default function Landmarks({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 0,
+    marginHorizontal: -20
+  },
   text: {},
-  heading: {},
-  icon: {},
-  photo: { width: "100%", height: 200 },
+  heading: {
+    backgroundColor: 'white',
+    padding: 20,
+    marginLeft: 0
+  },
+  photo: { width: "100%", height: 200},
 });

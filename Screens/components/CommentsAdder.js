@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Button } from "react-native";
+import { StyleSheet, View} from "react-native";
+import { TextInput, Button, Title, Modal, Text} from 'react-native-paper';
 import { getAuth } from "firebase/auth";
 import { db } from "../../config";
 import { collection, addDoc } from "firebase/firestore";
@@ -33,33 +34,34 @@ export default function CommentsAdder({ setComments, landmarkId }) {
   }
 
   return (
-    <View>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Type your comment here..."
-        placeholderTextColor="white"
-        value={comment}
-        onChangeText={(value) => setComment(value)}
-      />
-      <Button
-        style={styles.button}
-        title="Add comment"
-        onPress={handleSubmit}
-      />
+    <View style={styles.container}>
+
+        <TextInput
+            label="Type your comment..."
+            value={comment}
+            onChangeText={(text) => setComment(text)}
+            mode="outlined"
+            style={styles.input}
+        />
+
+        <Button mode="contained" onPress={handleSubmit} style={styles.button}>
+        Add comment
+        </Button>
+      
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  textInput: {
-    color: "white",
-    backgroundColor: "black",
-    height: 40,
-    fontSize: 20,
-  },
-  text: {
-    fontSize: 20,
-    color: "white",
-  },
-  button: { margin: 10 },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 16,
+      },
+      input: {
+        marginVertical: 0,
+      },
+      button: {
+        marginVertical: 20,
+      }
 });
