@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MapView, { Polyline, Polygon, Marker } from "../setup/map";
+import MapView, {Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
@@ -18,7 +18,6 @@ import { useNavigation } from "@react-navigation/core";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
-  const [locationHistory, setLocationHistory] = useState([]);
   const [region, setRegion] = useState(createGrid());
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
   const navigation = useNavigation();
@@ -41,16 +40,13 @@ export default function MapScreen() {
           return "error";
         }
         return Location.watchPositionAsync(
-          { accuracy: Location.Accuracy.Highest, timeInterval: 10000 },
+          { accuracy: Location.Accuracy.Highest, timeInterval: 2000 },
           (movedLocation) => {
             const newCoordinates = {
               latitude: movedLocation.coords.latitude,
               longitude: movedLocation.coords.longitude,
             };
             setLocation(newCoordinates);   
-            setLocationHistory((currHistory) => {
-                return [...currHistory, newCoordinates];
-              });
             }
             );
           });
@@ -59,6 +55,7 @@ export default function MapScreen() {
       }, []);
 
   useEffect(() => {
+
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
         if (
@@ -91,7 +88,6 @@ export default function MapScreen() {
       })
       .then((array) => {
         setFinalLandmarkArray(array);
-        
       });
   }, [newLandmarkTitle]);
 
@@ -116,9 +112,8 @@ export default function MapScreen() {
         console.log("error:", error);
       });
   }
-
     const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
-    delay(2000).then(() => setLoadingModal(false));
+    delay(5000).then(() => setLoadingModal(false));
 
 return (
   <View style={styles.container}>
@@ -138,7 +133,7 @@ return (
             style={{
               height: 200,
               width: 100,
-              padding:75
+              padding: 75,
             }}
           />
           <ActivityIndicator size="large" />
@@ -152,7 +147,7 @@ return (
       <MapView
         minZoomLevel={15}
         style={{ flex: 1, height: "100%" }}
-        initialRegion={{
+        region={{
           latitude: 53.82,
           longitude: -1.58,
           latitudeDelta: 0.09,
@@ -161,6 +156,7 @@ return (
         provider="google"
         googleMapsApiKey={loadMaps}
         customMapStyle={mapStyle}
+        showsUserLocation={true}
       >
         {region.map((tile, index) => {
           return (
@@ -174,7 +170,6 @@ return (
             />
           );
         })}
-        {location && <Polyline coordinates={locationHistory} strokeWidth={5} />}
 
         {finalLandmarkArray.map((data, index) => (
           <Marker
@@ -190,8 +185,7 @@ return (
             }}
             title={`${data.Title}`}
             description={`${data.Description}`}
-          >
-          </Marker>
+          ></Marker>
         ))}
       </MapView>
     </View>
