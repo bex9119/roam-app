@@ -15,6 +15,7 @@ import { db } from "../config";
 import Modal from "react-native-modal";
 import { Pressable, Text, View, StyleSheet, TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+const customPin = "../assets/re-sized-landmark-pin.png";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
@@ -163,6 +164,7 @@ export default function MapScreen() {
               }}
               title={`${data.Title}`}
               description={`${data.Description}`}
+              image={require(customPin)}
             />
           ))}
         </MapView>
