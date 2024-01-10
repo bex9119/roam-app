@@ -16,12 +16,12 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Screen name="Login" component={LoginPage} />
-          <Tab.Screen name="Sign-up" component={SignUp} />
-          <Tab.Screen name="MapScreen" component={MapScreen} />
-          <Tab.Screen name="Landmarks" component={Landmarks} />
-          <Tab.Screen name="Routes" component={Routes} />
-          <Tab.Screen name="What's Local?" component={WhatsLocal} />
+          <Tab.Screen name="Login" component={LoginPage} options={{headerShown: false}} />
+          <Tab.Screen name="Sign-up" component={SignUp} options={{headerShown: false}} />
+          <Tab.Screen name="MapScreen" component={MapScreen} options={{headerShown: false}} />
+          <Tab.Screen name="Landmarks" component={Landmarks} options={{headerShown: false}}  />
+          <Tab.Screen name="Routes" component={Routes} options={{headerShown: false}} />
+          <Tab.Screen name="What's Local?" component={WhatsLocal} options={{headerShown: false}} />
         </Tab.Navigator>
       </NavigationContainer>
     </PaperProvider>

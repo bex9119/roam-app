@@ -1,15 +1,20 @@
 import { collection, getDocs, query, where } from "@firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Image, StyleSheet, Text } from "react-native";
 import { db } from "../../config";
 import { View } from "react-native-animatable";
 import Swiper from 'react-native-swiper';
+import { Title } from "react-native-paper";
+
+
+
 
 
 
 export default function ImageGallery({ landmarkId }) {
   const [landmarkImages, setLandmarkImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isCarousel = useRef(null);
 
   useEffect(() => {
     const q = query(
@@ -28,7 +33,7 @@ export default function ImageGallery({ landmarkId }) {
   }
   return (
     <View>
-      <Swiper style={styles.wrapper} showsButtons={true}>
+      <Swiper style={styles.wrapper} height={300} showsButtons={true}>
         {landmarkImages.map((image, index) => (
           <View key={index} style={styles.slide}>
             <Image source={{ uri: image.doc.data.value.mapValue.fields.image_url.stringValue }} style={styles.image} />
@@ -51,10 +56,13 @@ export default function ImageGallery({ landmarkId }) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {},
+  wrapper: {
+    marginTop: 0
+  },
   slide: {
     flex: 5,
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "center",
 
   },
   image: {
