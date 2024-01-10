@@ -43,7 +43,7 @@ export default function MapScreen({ route }) {
     });
   }
 
-  // setCurrentUser(getAuth().currentUser.displayName);
+  setCurrentUser(getAuth().currentUser.displayName);
 
   // if (!getAuth().currentUser) {
   //   navigation.navigate("loginPage");
@@ -180,7 +180,7 @@ export default function MapScreen({ route }) {
                 key={`tile${index}`}
                 coordinates={tile.location}
                 fillColor={
-                  tile.fill ? "rgba(208,208,208,0.8)" : "rgba(208,208,208,0)"
+                  tile.fill ? "rgba(208,208,208,0.90)" : "rgba(208,208,208,0)"
                 }
                 strokeColor="rgba(0,0,0,0)"
               />
@@ -246,6 +246,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 10,
+    marginTop: -30
   },
   separator: {
     marginVertical: 30,
