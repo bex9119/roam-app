@@ -49,6 +49,8 @@ export default function LoginPage() {
           onChangeText={(text) => setEmail(text)}
           mode="outlined"
           style={styles.input}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
 
         <TextInput
@@ -58,6 +60,7 @@ export default function LoginPage() {
           secureTextEntry
           mode="outlined"
           style={styles.input}
+          autoCapitalize="none"
         />
 
         <Button mode="contained" onPress={handleSubmit} style={styles.button}>

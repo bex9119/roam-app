@@ -42,8 +42,9 @@ export default function MapScreen({ route }) {
       return snapshot.data().mapLoad;
     });
   }
-
-  setCurrentUser(getAuth().currentUser.displayName);
+  useEffect(() => {
+    setCurrentUser(getAuth().currentUser.displayName);
+  }, [])
 
   // if (!getAuth().currentUser) {
   //   navigation.navigate("loginPage");
@@ -274,9 +275,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#000",
     borderStyle: "solid",
-    height: "20%",
+    height: "35%",
     padding: 20,
     paddingTop: 10,
+    justifyContent:'center'
   },
   textInput: {
     backgroundColor: "white",
@@ -285,8 +287,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     borderColor: "#ffffff",
-    justifyContent: "center",
-    alignContent: "center",
+    paddingBottom: 10,
   },
   modalText: {
     color: "#42618d",
@@ -294,6 +295,7 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     lineHeight: 40,
+    alignContent:'center'
   },
   content: {
     alignItems: "center",
