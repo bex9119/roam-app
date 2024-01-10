@@ -15,6 +15,7 @@ import { db } from "../config";
 import Modal from "react-native-modal";
 import { Pressable, Text, View, StyleSheet, TextInput, Image, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+const customPin = "../assets/re-sized-landmark-pin.png";
 
 export default function MapScreen() {
   const [location, setLocation] = useState({});
@@ -136,7 +137,7 @@ return (
               padding: 75,
             }}
           />
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" style={{padding:30}} />
           <Text style={styles.text}>Explore your local area</Text>
           <Text style={styles.text}>Discover new places</Text>
           <Text style={styles.text}>Share your favourite spots</Text>
@@ -185,7 +186,8 @@ return (
             }}
             title={`${data.Title}`}
             description={`${data.Description}`}
-          ></Marker>
+            image={require(customPin)}
+          />
         ))}
       </MapView>
     </View>
@@ -256,6 +258,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
+    lineHeight: 40,
   },
   content: {
     alignItems: "center",
