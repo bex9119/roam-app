@@ -17,26 +17,23 @@ import { db } from "../config";
 export default function Landmarks({ route, navigation }) {
   const { id } = route.params;
   const [startCamera, setStartCamera] = useState(false);
-  const [coverImage, setCoverImage] = useState(null)
+  const [coverImage, setCoverImage] = useState(null);
 
   useEffect(() => {
-      const q = query(
-      collection(db, "images"),
-      where("landmarkId", "==", id)
-      );
-      getDocs(q)
+    const q = query(collection(db, "images"), where("landmarkId", "==", id));
+    getDocs(q)
       .then((snapshot) => {
         let image = [];
         snapshot.forEach((imageData) => {
-          image.push(imageData.data().image_url)
+          image.push(imageData.data().image_url);
         });
-        return image[0]
+        return image[0];
       })
       .then((image) => {
         setCoverImage(image);
       });
-  }, [id])
-  
+  }, [id, startCamera]);
+
   if (startCamera) {
     return <CameraScreen landmarkId={id} setStartCamera={setStartCamera} />;
   } else {
@@ -48,13 +45,14 @@ export default function Landmarks({ route, navigation }) {
             <Text style={styles.heading}>Landmark</Text>
           </View>
           <View>
-            {coverImage &&
+            {coverImage && (
               <Image
                 style={styles.photo}
                 source={{
                   uri: coverImage,
                 }}
-              />}
+              />
+            )}
           </View>
           <View>
             <Text>Take Photo</Text>

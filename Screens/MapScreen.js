@@ -122,7 +122,7 @@ export default function MapScreen() {
     <View style={styles.container}>
       <View style={styles.mapView}>
         <MapView
-          minZoomLevel={15}
+          minZoomLevel={7}
           style={{ flex: 1, height: "100%" }}
           initialRegion={{
             latitude: 53.8,
