@@ -65,7 +65,7 @@ export default function LoginPage() {
 
         <Portal>
             <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalStyle}>
-            <Text>Invalid User Login</Text>
+            <Text>Invalid email or password</Text>
             </Modal>
         </Portal>
 

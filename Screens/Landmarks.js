@@ -16,7 +16,7 @@ import { db } from "../config";
 
 
 
-export default function Landmarks({ route, navigation }) {
+export default function Landmarks({ route }) {
   const { id, currentLandmark, setCurrentLandmark } = route.params;
   const [startCamera, setStartCamera] = useState(false);
   const [landmarkTitle, setLandmarkTitle] = useState("");
