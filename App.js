@@ -16,19 +16,19 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState()
 
   function handleLogout() {
-    // const auth = getAuth()
-    // signOut(auth)
+    const auth = getAuth()
+    signOut(auth)
   }
 
   return (
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginPage} options={{headerShown: false}} />
+          <Stack.Screen name="LoginPage" component={LoginPage} options={{headerShown: false}} />
           <Stack.Screen name="Sign-up" component={SignUp} options={{headerShown: false}} />
           <Stack.Screen name="MapScreen" component={MapScreen} options={{headerShown: true, headerTitle: `${currentUser}'s map`, headerRight: () => (
             <Button
-            onPress={handleLogout()}
+              onPress={() => {handleLogout()}}
               title="Log out"
             />
           ), headerLeft:() => (false)}} navigationOptions= {{gesturesEnabled: false}} initialParams={{currentUser, setCurrentUser}}/>

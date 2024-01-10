@@ -16,6 +16,8 @@ export default function LoginPage() {
         setButtonDisabled(true);
         signInWithEmailAndPassword(auth, email, password)
         .then(() => {
+            setEmail("");
+            setPassword("");
             navigation.navigate('MapScreen')
         })
         .catch((error) => {
