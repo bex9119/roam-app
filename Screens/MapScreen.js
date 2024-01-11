@@ -24,7 +24,7 @@ import {
 import { useNavigation } from "@react-navigation/core";
 const customPin = "../assets/re-sized-landmark-pin.png";
 import { Button, TextInput } from "react-native-paper";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function MapScreen({ route }) {
   const [location, setLocation] = useState({});
@@ -48,9 +48,14 @@ export default function MapScreen({ route }) {
     setCurrentUser(getAuth().currentUser.displayName)}
   }, [])
 
-  // if (!getAuth().currentUser) {
-  //   navigation.navigate("loginPage");
-  // }
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigation.navigate("LoginPage") 
+      }
+    });
+  }, [getAuth().currentUser])
 
   useEffect(() => {
     const startLocationUpdates = () => {

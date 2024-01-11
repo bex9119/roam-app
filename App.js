@@ -23,8 +23,8 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState();
 
   function handleLogout() {
-    // const auth = getAuth()
-    // signOut(auth)
+    const auth = getAuth()
+    signOut(auth)
   }
 
   return (
@@ -32,7 +32,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="Login"
+            name="LoginPage"
             component={LoginPage}
             options={{ headerShown: false }}
           />
@@ -50,7 +50,7 @@ export default function App() {
               headerRight: () => (
                 <Button
                   color="#42618d"
-                  onPress={handleLogout()}
+                  onPress={() => {handleLogout()}}
                   title="Log out"
                 />
               ),

@@ -19,16 +19,18 @@ export default function LoginPage() {
   const [visible, setVisbile] = useState(false);
   const navigation = useNavigation();
 
-  function handleSubmit() {
-    setButtonDisabled(true);
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.navigate("MapScreen");
-      })
-      .catch((error) => {
-        showModal();
-      });
-  }
+    function handleSubmit() {
+        setButtonDisabled(true);
+        signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            setEmail("");
+            setPassword("");
+            navigation.navigate('MapScreen')
+        })
+        .catch((error) => {
+            showModal();
+        });
+    }
 
   function showModal() {
     setVisbile(true);
