@@ -31,38 +31,41 @@ export default function SignUp({navigation}) {
 
   return (
     <>
-    <View style={styles.container}>
-      <Title>Sign Up</Title>
+      <View style={styles.container}>
+        <Title>Sign Up</Title>
 
-      <TextInput
+        <TextInput
           label="Username"
           value={username}
           onChangeText={(text) => setUsername(text)}
           mode="outlined"
           style={styles.input}
-      />
-      
-      <TextInput
+        />
+
+        <TextInput
           label="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
           mode="outlined"
           style={styles.input}
-      />
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-      <TextInput
+        <TextInput
           label="Password"
           value={password}
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
           mode="outlined"
           style={styles.input}
-      />
+          autoCapitalize="none"
+        />
 
-      <Button mode="contained" onPress={handleSubmit} style={styles.button}>
+        <Button mode="contained" onPress={handleSubmit} style={styles.button}>
           Sign Up
-      </Button>
-    </View>
+        </Button>
+      </View>
     </>
   );
 }

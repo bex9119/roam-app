@@ -1,4 +1,4 @@
-import { StyleSheet, Button } from "react-native";
+import { StyleSheet, Button, LogBox } from "react-native";
 import SignUp from "./Screens/SignUp";
 import LoginPage from "./Screens/LoginPage";
 import Landmarks from "./Screens/Landmarks";
@@ -14,6 +14,9 @@ import { useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 
 export default function App() {
+    LogBox.ignoreLogs([
+      "Non-serializable values were found in the navigation state",
+    ]);
   const Stack = createNativeStackNavigator();
 
   const [currentLandmark, setCurrentLandmark] = useState();
