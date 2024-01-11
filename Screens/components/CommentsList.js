@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Comment from "./Comment";
 import { Text } from "react-native";
 import CommentsAdder from "./CommentsAdder";
+import { Title } from "react-native-paper";
 
 export default function CommentsList({ landmarkId }) {
   const [comments, setComments] = useState();
@@ -39,6 +40,7 @@ export default function CommentsList({ landmarkId }) {
   }
   return (
     <View>
+      <Title style={{marginVertical: 25, marginLeft: 25}}>Community Stories</Title>
       <CommentsAdder setComments={setComments} landmarkId={landmarkId} />
       {comments.map((comment, index) => {
         return <Comment key={index} comment={comment} />;

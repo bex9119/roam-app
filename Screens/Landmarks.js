@@ -59,18 +59,18 @@ export default function Landmarks({ route }) {
               />
             )}
           </View>
-          <View>
+          <View style={styles.gallery}>
+            <ImageGallery landmarkId={id} style={styles.imageGallery}/>
             <Button
               icon="camera"
               style={styles.cameraButton}
               mode="contained"
               onPress={() => setStartCamera(true)}
             >
-              Take Photo
+              Add Photo
             </Button>
-            <ImageGallery landmarkId={id} />
           </View>
-          <View>
+          <View style={styles.gallery}>
             <CommentsList landmarkId={id} />
           </View>
         </ScrollView>
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 0,
     marginHorizontal: -20,
+    backgroundColor: "#949494"
   },
   text: {},
   heading: {
@@ -94,9 +95,14 @@ const styles = StyleSheet.create({
     marginLeft: 0,
   },
   cameraButton: {
-    marginTop: 25,
     marginHorizontal: 20,
     backgroundColor: "#42618d",
+    marginBottom: 20
   },
   photo: { width: "100%", height: 200 },
+  gallery: {
+    margin: 20,
+    borderRadius: 25,
+    backgroundColor: '#c8c8c8'
+  }
 });

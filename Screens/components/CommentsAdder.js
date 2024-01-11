@@ -36,15 +36,16 @@ export default function CommentsAdder({ setComments, landmarkId }) {
   return (
     <View style={styles.container}>
       <TextInput
-        label="Type your comment..."
+        label="Leave a comment..."
         value={comment}
         onChangeText={(text) => setComment(text)}
         mode="outlined"
         style={styles.input}
+        theme={{colors: {primary: '#42618d', underlineColor: 'transparent'}}}
       />
 
       <Button mode="contained" onPress={handleSubmit} style={styles.button}>
-        Add comment
+        Post comment
       </Button>
     </View>
   );

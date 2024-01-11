@@ -42,6 +42,12 @@ export default function App() {
             name="MapScreen"
             component={MapScreen}
             options={{
+              headerStyle: {
+                backgroundColor: '#393939',
+              },
+              headerTitleStyle: {
+                color: 'white'
+              },
               headerShown: true,
               headerTitle: `${currentUser}'s map`,
               headerRight: () => (
@@ -59,7 +65,16 @@ export default function App() {
           <Stack.Screen
             name="Landmarks"
             component={Landmarks}
-            options={{ headerShown: true, title: currentLandmark }}
+            options={{ headerShown: true, title: currentLandmark, 
+            headerStyle: {
+              backgroundColor: '#393939',
+            },
+            headerTitleStyle: {
+              color: 'white'
+            },
+            headerTintColor: {
+              color: 'white'
+            } }}
             initialParams={{ currentLandmark, setCurrentLandmark }}
           />
         </Stack.Navigator>

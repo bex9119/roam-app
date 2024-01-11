@@ -32,7 +32,8 @@ export default function ImageGallery({ landmarkId }) {
     return <Text>Loading...</Text>;
   }
   return (
-    <View style={{marginHorizontal: 20, paddingBottom: 0}}>
+    <View style={{marginHorizontal: 20, paddingBottom: 0, marginTop: 25}}>
+      <Title>Landmark Gallery</Title>
       <Swiper style={styles.wrapper} height={300} showsButtons={false}>
         {landmarkImages.map((image, index) => (
           <View key={index} style={styles.slide}>
@@ -69,5 +70,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '60%',
+    borderRadius: 25
   }
 });
