@@ -60,7 +60,7 @@ export default function SignUp({navigation}) {
           }}/>
       <Title style={styles.text}>Sign Up</Title>
 
-      <TextInput
+        <TextInput
           label="Username"
           value={username}
           onChangeText={(text) => setUsername(text)}
@@ -80,9 +80,10 @@ export default function SignUp({navigation}) {
           theme={{colors: {primary: '#949494', underlineColor: 'transparent'}}}
           textColor="#ffffff"
           autoCapitalize="none"
-      />
+          keyboardType="email-address"
+        />
 
-      <TextInput
+        <TextInput
           label="Password"
           value={password}
           onChangeText={(text) => setPassword(text)}
@@ -94,10 +95,10 @@ export default function SignUp({navigation}) {
           autoCapitalize="none"
       />
 
-      <Button mode="contained" onPress={handleSubmit} style={styles.button}>
+        <Button mode="contained" onPress={handleSubmit} style={styles.button}>
           Sign Up
-      </Button>
-    </View>
+        </Button>
+      </View>
     </>
   );
 }

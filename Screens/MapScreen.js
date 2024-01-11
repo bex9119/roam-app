@@ -25,7 +25,7 @@ import { useNavigation } from "@react-navigation/core";
 const customPin = "../assets/re-sized-landmark-pin.png";
 import { Button, Portal, TextInput } from "react-native-paper";
 import {Modal as ModalPaper} from "react-native-paper";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function MapScreen({ route }) {
   const [location, setLocation] = useState({});
@@ -45,8 +45,6 @@ export default function MapScreen({ route }) {
     });
   }
 
-  setCurrentUser(getAuth().currentUser.displayName);
-
   function showModal() {
     setVisbile(true);
   }
@@ -54,6 +52,20 @@ export default function MapScreen({ route }) {
   function hideModal() {
     setVisbile(false);
   }
+  
+  useEffect(() => {
+    if(getAuth().currentUser){
+    setCurrentUser(getAuth().currentUser.displayName)}
+  }, [])
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigation.navigate("LoginPage") 
+      }
+    });
+  }, [getAuth().currentUser])
 
   useEffect(() => {
     const startLocationUpdates = () => {
@@ -294,9 +306,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#000",
     borderStyle: "solid",
-    height: "20%",
+    height: "35%",
     padding: 20,
     paddingTop: 10,
+    justifyContent:'center'
   },
   textInput: {
     backgroundColor: "white",
@@ -305,8 +318,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     borderColor: "#ffffff",
-    justifyContent: "center",
-    alignContent: "center",
+    paddingBottom: 10,
   },
   modalText: {
     color: "#42618d",
@@ -314,6 +326,7 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     lineHeight: 40,
+    alignContent:'center'
   },
   content: {
     alignItems: "center",
