@@ -23,7 +23,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 const customPin = "../assets/re-sized-landmark-pin.png";
-import { Button, TextInput } from "react-native-paper";
+import { Button, Portal, TextInput } from "react-native-paper";
+import {Modal as ModalPaper} from "react-native-paper";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function MapScreen({ route }) {
@@ -35,6 +36,7 @@ export default function MapScreen({ route }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [loadingModal, setLoadingModal] = useState(true);
+  const [visible, setVisbile] = useState(false);
   const { currentUser, setCurrentUser } = route.params;
 
   function loadMaps() {
@@ -43,6 +45,14 @@ export default function MapScreen({ route }) {
     });
   }
 
+  function showModal() {
+    setVisbile(true);
+  }
+
+  function hideModal() {
+    setVisbile(false);
+  }
+  
   useEffect(() => {
     if(getAuth().currentUser){
     setCurrentUser(getAuth().currentUser.displayName)}
@@ -169,11 +179,11 @@ export default function MapScreen({ route }) {
       </View>
       <View style={styles.mapView}>
         <MapView
-          minZoomLevel={15}
+          minZoomLevel={17}
           style={{ flex: 1, height: "100%" }}
           region={{
-            latitude: 53.82,
-            longitude: -1.58,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.09,
             longitudeDelta: 0.04,
           }}
@@ -198,9 +208,17 @@ export default function MapScreen({ route }) {
           {finalLandmarkArray.map((data, index) => (
             <Marker
               onPress={() => {
-                {
-                  navigation.navigate("Landmarks", { id: data.id });
-                }
+                if (
+                  (data.Coordinate.latitude - 0.00033 <= location.latitude && location.latitude <= data.Coordinate.latitude + 0.00033)
+                   && 
+                   (data.Coordinate.longitude - 0.0005 <= location.longitude && location.longitude <= data.Coordinate.longitude + 0.0005)) {
+                    {
+                      navigation.navigate("Landmarks", { id: data.id });
+                    }
+                   }
+                  else {
+                    showModal()
+                  }
               }}
               key={index}
               coordinate={{
@@ -208,7 +226,6 @@ export default function MapScreen({ route }) {
                 longitude: data.Coordinate._long,
               }}
               title={`${data.Title}`}
-              description={`${data.Description}`}
               image={require(customPin)}
             />
           ))}
@@ -218,7 +235,7 @@ export default function MapScreen({ route }) {
         <Modal isVisible={isModalVisible}>
           <View style={styles.modal}>
             <TextInput
-              placeholder="What is this Landmark?"
+              placeholder="Name your landmark!"
               style={styles.textInput}
               onChangeText={(title) => setNewLandmarkTitle(title)}
             />
@@ -242,10 +259,15 @@ export default function MapScreen({ route }) {
       >
         <Text>Add a new landmark</Text>
       </Button>
-
-      {/* <Pressable style={styles.addPinButton} onPress={addPinFunction}>
-        <Text>Add a new landmark</Text>
-      </Pressable> */}
+      <Portal>
+        <ModalPaper
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={styles.modalStyle}
+        >
+          <Text>Landmark is too far away!</Text>
+        </ModalPaper>
+      </Portal>
     </View>
   );
 }
@@ -253,8 +275,9 @@ export default function MapScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 10,
-    marginTop: -30
+    marginBottom: 0,
+    marginTop: -30,
+    backgroundColor: "#393939"
   },
   separator: {
     marginVertical: 30,
@@ -273,6 +296,7 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: "center",
     marginTop: -50,
+    marginBottom: 10,
     marginHorizontal: 40,
   },
   modal: {
@@ -307,5 +331,9 @@ const styles = StyleSheet.create({
   content: {
     alignItems: "center",
     justifyContent: "center",
+  },
+  modalStyle: {
+    backgroundColor: "white",
+    padding: 20,
   },
 });

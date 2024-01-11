@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View, Image } from "react-native";
 import {
   TextInput,
   Button,
@@ -43,7 +43,13 @@ export default function LoginPage() {
   return (
     <>
       <View style={styles.container}>
-        <Title>Login</Title>
+        <Image 
+        source={require("../assets/roamLogo.png")}
+        style={{
+            height: 200,
+            width: 375, 
+          }}/>
+        <Title style={styles.text}>Log in</Title>
 
         <TextInput
           label="Email"
@@ -53,6 +59,8 @@ export default function LoginPage() {
           style={styles.input}
           keyboardType="email-address"
           autoCapitalize="none"
+          theme={{colors: {primary: '#949494', underlineColor: 'transparent'}}}
+          textColor="#ffffff"
         />
 
         <TextInput
@@ -62,11 +70,13 @@ export default function LoginPage() {
           secureTextEntry
           mode="outlined"
           style={styles.input}
+          theme={{colors: {primary: '#949494', underlineColor: 'transparent'}}}
+          textColor="#ffffff"
           autoCapitalize="none"
         />
 
         <Button mode="contained" onPress={handleSubmit} style={styles.button}>
-          Login
+          Log in
         </Button>
         <Pressable
           style={{ marginTop: 30, alignItems: "center" }}
@@ -74,7 +84,7 @@ export default function LoginPage() {
             navigation.navigate("Sign-up");
           }}
         >
-          <Text>Click here if you want to Sign up</Text>
+          <Text style={styles.text}>Don't already have an account? Sign up here!</Text>
         </Pressable>
       </View>
 
@@ -97,9 +107,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 16,
     color: "#42618d",
+    backgroundColor: "#393939"
   },
   input: {
     marginVertical: 8,
+    backgroundColor: "#2c2c2c",
+    activeOutlineColor: "#ffffff",
   },
   button: {
     marginTop: 16,
@@ -109,4 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
   },
+  text : {
+    color: "white"
+  }
 });

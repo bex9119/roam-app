@@ -1,5 +1,19 @@
 import * as Location from "expo-location";
-//top left corner
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../config";
+import { getAuth } from "firebase/auth";
+
+
+  // const q = query(
+  //   collection(db, "maps"),
+  //   where("uid", "==", getAuth().currentUser.uid)
+  // );
+  // getDocs(q).then((snapshot) => {
+  //   const coordsData = snapshot._snapshot.docChanges
+  //   startLat = (coordsData[0].doc.data.value.mapValue.fields.startLatitude.doubleValue)
+  //   startLong = (coordsData[0].doc.data.value.mapValue.fields.startLongitude.doubleValue)
+  // })
+
 const startLong = -1.59612;
 const startLat = 53.8;
 

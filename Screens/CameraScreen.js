@@ -98,7 +98,7 @@ export default function CameraScreen({ landmarkId, setStartCamera }) {
 
       <Button
         color="#42618d"
-        title="Flip Image"
+        title="Flip Camera"
         onPress={() => {
           setType(
             type === Camera.Constants.Type.back
@@ -110,10 +110,10 @@ export default function CameraScreen({ landmarkId, setStartCamera }) {
 
       <Button
         color="#42618d"
-        title="Take Picture"
+        title="Take Photo"
         onPress={() => takePicture()}
       />
-      <Button color="#42618d" title="Confirm" onPress={() => uploadPicture()} />
+      {image && <Button color="#42618d" title="Confirm" onPress={() => uploadPicture()} />}
       <Button
         color="#42618d"
         title="Close Camera"
