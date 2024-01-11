@@ -4,37 +4,36 @@ import { db } from "../config";
 import { getAuth } from "firebase/auth";
 
 
-  const q = query(
-    collection(db, "maps"),
-    where("uid", "==", getAuth().currentUser.uid)
-  );
-  getDocs(q).then((snapshot) => {
-    const coordsData = snapshot._snapshot.docChanges
-    startLat = (coordsData[0].doc.data.value.mapValue.fields.startLatitude.doubleValue)
-    startLong = (coordsData[0].doc.data.value.mapValue.fields.startLongitude.doubleValue)
-  
-  })
+  // const q = query(
+  //   collection(db, "maps"),
+  //   where("uid", "==", getAuth().currentUser.uid)
+  // );
+  // getDocs(q).then((snapshot) => {
+  //   const coordsData = snapshot._snapshot.docChanges
+  //   startLat = (coordsData[0].doc.data.value.mapValue.fields.startLatitude.doubleValue)
+  //   startLong = (coordsData[0].doc.data.value.mapValue.fields.startLongitude.doubleValue)
+  // })
 
-// const startLong = -1.59612;
-// const startLat = 53.8;
+const startLong = -1.59612;
+const startLat = 53.8;
 
 const createGrid = () => {
-  let longitude = startLong - 0.025;
+  let longitude = startLong;
   let longGrid = [];
   let grid = [];
   let tiles = [];
   const longitudeInterval = 0.001;
   const latitudeInterval = 0.00066;
 // more negative (smaller number) moves grid left
-  while (longitude < startLong + 0.025 && longitude >= startLong - 0.025) {
+  while (longitude < startLong + 0.05 && longitude >= startLong) {
     longGrid.push(longitude);
     longitude += longitudeInterval;
   }
 
   longGrid.forEach((long) => {
     //up or down, larger number moves grid up
-    let latitude = startLat - 0.015;
-    while (latitude >= startLat - 0.015 && latitude < startLat + 0.015) {
+    let latitude = startLat;
+    while (latitude >= startLat && latitude < startLat + 0.03) {
       let square = { longitude: long, latitude: null };
       square.latitude = latitude;
       latitude += latitudeInterval;
