@@ -42,8 +42,10 @@ export default function MapScreen({ route }) {
       return snapshot.data().mapLoad;
     });
   }
+
   useEffect(() => {
-    setCurrentUser(getAuth().currentUser.displayName);
+    if(getAuth().currentUser){
+    setCurrentUser(getAuth().currentUser.displayName)}
   }, [])
 
   // if (!getAuth().currentUser) {
