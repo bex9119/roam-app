@@ -8,7 +8,7 @@ Roam solves this problem by creating an app that promotes discovery of your loca
 
 Roam is a community-driven app where users create and share landmarks to educate others in the area. Roam lets users post pictures and share stories to entice others to discover the hidden gems of their community.
 
-## Installation 
+## Installation and Running
 
 In your terminal enter the command: 
 ```
@@ -33,3 +33,7 @@ If this doesnt work, you may need to try the following command instead and follo
 ```
 npx expo start --tunnel
 ```
+
+You will than have a QR code logged to the terminal. Open the camera app on your device and scan this QR code. The app will compile and you should now be able to use Roam. 
+
+Enjoy!!!
