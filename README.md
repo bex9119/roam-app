@@ -8,6 +8,10 @@ Roam solves this problem by creating an app that promotes discovery of your loca
 
 Roam is a community-driven app where users create and share landmarks to educate others in the area. Roam lets users post pictures and share stories to entice others to discover the hidden gems of their community.
 
+
+https://github.com/Thomas-Smith0176/roam-app/assets/125141194/7dd1e401-4dd3-488c-9d32-0ca84a3fbeb3
+
+
 ## Installation and Running
 
 In your terminal enter the command: 
