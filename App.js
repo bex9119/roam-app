@@ -2,11 +2,7 @@ import { StyleSheet, Button, LogBox } from "react-native";
 import SignUp from "./Screens/SignUp";
 import LoginPage from "./Screens/LoginPage";
 import Landmarks from "./Screens/Landmarks";
-import {
-  NavigationContainer,
-  StackActions,
-  useNavigation,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import MapScreen from "./Screens/MapScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PaperProvider } from "react-native-paper";

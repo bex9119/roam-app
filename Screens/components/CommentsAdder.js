@@ -9,9 +9,7 @@ export default function CommentsAdder({ setComments, landmarkId }) {
   const [comment, setComment] = useState("");
 
   function handleSubmit() {
-    console.log("submitted");
     const username = getAuth().currentUser.displayName;
-    console.log(username);
 
     const myCollection = collection(db, "comments");
     const myDocumentData = {
@@ -22,7 +20,6 @@ export default function CommentsAdder({ setComments, landmarkId }) {
 
     addDoc(myCollection, myDocumentData)
       .then(() => {
-        console.log("comment added");
         setComments((currComments) => {
           return [...currComments, [comment, username]];
         });

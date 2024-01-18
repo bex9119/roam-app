@@ -3,24 +3,10 @@ import MapView, { Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  GeoPoint,
-} from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, GeoPoint } from "firebase/firestore";
 import { db } from "../config";
 import Modal from "react-native-modal";
-import {
-  Pressable,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  ActivityIndicator,
-} from "react-native";
+import { Text, View, StyleSheet, Image, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 const customPin = "../assets/re-sized-landmark-pin.png";
 import { Button, Portal, TextInput } from "react-native-paper";
@@ -71,7 +57,6 @@ export default function MapScreen({ route }) {
     const startLocationUpdates = () => {
       Location.requestForegroundPermissionsAsync().then(({ status }) => {
         if (status !== "granted") {
-          console.log("error");
           return "error";
         }
         return Location.watchPositionAsync(
@@ -177,6 +162,7 @@ export default function MapScreen({ route }) {
           </View>
         </Modal>
       </View>
+
       <View style={styles.mapView}>
         <MapView
           minZoomLevel={17}
@@ -231,6 +217,7 @@ export default function MapScreen({ route }) {
           ))}
         </MapView>
       </View>
+      
       <View style={styles.separator}>
         <Modal isVisible={isModalVisible}>
           <View style={styles.modal}>
@@ -287,8 +274,6 @@ const styles = StyleSheet.create({
   mapView: {
     height: "90%",
     width: "100%",
-    // borderWidth: 10,
-    // borderColor: "#42618d",
   },
   addPinButton: {
     borderWidth: StyleSheet.hairlineWidth,

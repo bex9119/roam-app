@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, View, Image } from "react-native";
-import {
-  TextInput,
-  Button,
-  Title,
-  Modal,
-  Text,
-  Portal,
-} from "react-native-paper";
+import { TextInput, Button, Title, Modal, Text, Portal } from "react-native-paper";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config";
 import { useNavigation } from "@react-navigation/native";
@@ -27,7 +20,7 @@ export default function LoginPage() {
             setPassword("");
             navigation.navigate('MapScreen')
         })
-        .catch((error) => {
+        .catch(() => {
             showModal();
         });
     }

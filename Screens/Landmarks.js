@@ -1,24 +1,15 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Button, Title } from "react-native-paper";
-import { Camera, CameraType } from "expo-camera";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
+import { Button } from "react-native-paper";
 import { useEffect, useState } from "react";
 import CameraScreen from "./CameraScreen";
 import CommentsList from "./components/CommentsList";
 import ImageGallery from "./components/ImageGallery";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
 import { db } from "../config";
 
 export default function Landmarks({ route }) {
   const { id, currentLandmark, setCurrentLandmark } = route.params;
   const [startCamera, setStartCamera] = useState(false);
-  const [landmarkTitle, setLandmarkTitle] = useState("");
 
   const [coverImage, setCoverImage] = useState(null);
   useEffect(() => {

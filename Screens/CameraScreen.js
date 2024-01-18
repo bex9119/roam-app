@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Button,
-  Image,
-  Pressable,
-} from "react-native";
+import { StyleSheet, Text, View, Button, Image,} from "react-native";
 import { Camera } from "expo-camera";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
@@ -19,7 +11,6 @@ export default function CameraScreen({ landmarkId, setStartCamera }) {
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  // const [retake, setRetake] = useState('Take Picture')
 
   useEffect(() => {
     Camera.requestCameraPermissionsAsync()
@@ -37,7 +28,6 @@ export default function CameraScreen({ landmarkId, setStartCamera }) {
         .takePictureAsync(null)
         .then((data) => {
           setImage(data.uri);
-          // setRetake('Retake Picture')
         })
         .catch((error) => {
           console.error("Error taking picture:", error);
@@ -50,13 +40,10 @@ export default function CameraScreen({ landmarkId, setStartCamera }) {
     const filename = uploadUri.substring(uploadUri.lastIndexOf("/") + 1);
     const pictureRef = ref(storage, filename);
 
-    console.log(getAuth().currentUser);
-
     fetch(uploadUri)
       .then((response) => response.blob())
       .then((blob) => uploadBytes(pictureRef, blob))
-      .then((snapshot) => {
-        console.log("Image uploaded successfully");
+      .then(() => {
         return getDownloadURL(pictureRef);
       })
       .then((url) => {
@@ -72,7 +59,6 @@ export default function CameraScreen({ landmarkId, setStartCamera }) {
       })
       .then(() => {
         setStartCamera(false);
-        console.log("Image information added to the collection");
       })
       .catch((error) => {
         console.error("Error uploading image:", error);
@@ -125,6 +111,7 @@ export default function CameraScreen({ landmarkId, setStartCamera }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

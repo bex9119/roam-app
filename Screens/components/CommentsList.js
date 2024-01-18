@@ -11,8 +11,6 @@ export default function CommentsList({ landmarkId }) {
   const [comments, setComments] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
-  // const snap = await getDoc(doc(db, 'books', 'fK3ddutEpD2qQqRMXNW5'))
-
   useEffect(() => {
     const q = query(
       collection(db, "comments"),
