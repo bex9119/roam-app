@@ -22,14 +22,14 @@ const createGrid = () => {
        return Promise.all([firebaseLat, firebaseLong])
      })
      .then(([firebaseLat, firebaseLong]) => {
-       let longitude = firebaseLong - 0.025;
+       let longitude = firebaseLong - 0.0245;
        let longGrid = [];
        let grid = [];
        let tiles = [];
        const longitudeInterval = 0.001;
        const latitudeInterval = 0.00066;
 
-       while (longitude < firebaseLong + 0.025 && longitude >= firebaseLong - 0.025) {
+       while (longitude < firebaseLong + 0.025 && longitude >= firebaseLong - 0.0245) {
          longGrid.push(longitude);
          longitude += longitudeInterval;
        }
