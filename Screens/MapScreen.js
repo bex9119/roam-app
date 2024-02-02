@@ -26,12 +26,24 @@ export default function MapScreen({ route }) {
   const [loadingModal, setLoadingModal] = useState(true);
   const [visible, setVisbile] = useState(false);
   const { currentUser, setCurrentUser } = route.params;
-  
-  useEffect(() => {
-    createGrid().then((res) => {
-      setRegion(res)
-    })
-  }, [])
+      const startLocationUpdates = () => {
+        Location.requestForegroundPermissionsAsync().then(({ status }) => {
+          if (status !== "granted") {
+            return "error";
+          }
+          return Location.watchPositionAsync(
+            { accuracy: Location.Accuracy.Highest, timeInterval: 2000 },
+            (movedLocation) => {
+              const newCoordinates = {
+                latitude: movedLocation.coords.latitude,
+                longitude: movedLocation.coords.longitude,
+              };
+              console.log(newCoordinates);
+              setLocation(newCoordinates);
+            }
+          );
+        });
+      };
   
   function loadMaps() {
     return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
@@ -49,7 +61,12 @@ export default function MapScreen({ route }) {
   
   useEffect(() => {
     if(getAuth().currentUser){
-    setCurrentUser(getAuth().currentUser.displayName)}
+      setCurrentUser(getAuth().currentUser.displayName)
+        createGrid().then((res) => {
+          setRegion(res);
+        }).then(() => {
+          startLocationUpdates()
+        });}
   }, [])
 
   useEffect(() => {
@@ -62,28 +79,8 @@ export default function MapScreen({ route }) {
   }, [getAuth().currentUser])
 
   useEffect(() => {
-    const startLocationUpdates = () => {
-      Location.requestForegroundPermissionsAsync().then(({ status }) => {
-        if (status !== "granted") {
-          return "error";
-        }
-        return Location.watchPositionAsync(
-          { accuracy: Location.Accuracy.Highest, timeInterval: 2000 },
-          (movedLocation) => {
-            const newCoordinates = {
-              latitude: movedLocation.coords.latitude,
-              longitude: movedLocation.coords.longitude,
-            };
-            setLocation(newCoordinates);
-          }
-        );
-      });
-    };
-    startLocationUpdates();
-  }, []);
-
-  useEffect(() => {
     if (region) {
+      console.log('found a region')
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
         if (
@@ -92,6 +89,7 @@ export default function MapScreen({ route }) {
           location.longitude >= area.sortLong[0] &&
           location.longitude <= area.sortLong[1]
           ) {
+          console.log(area.id)
           const updatedArea = { ...area };
           updatedArea.fill = false;
           return updatedArea;
