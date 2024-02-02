@@ -26,9 +26,12 @@ export default function MapScreen({ route }) {
   const [loadingModal, setLoadingModal] = useState(true);
   const [visible, setVisbile] = useState(false);
   const { currentUser, setCurrentUser } = route.params;
-  createGrid().then((res) => {
-    setRegion(res)
-  })
+  
+  useEffect(() => {
+    createGrid().then((res) => {
+      setRegion(res)
+    })
+  }, [])
   
   function loadMaps() {
     return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
@@ -80,7 +83,7 @@ export default function MapScreen({ route }) {
   }, []);
 
   useEffect(() => {
-    if(region){
+    if (region) {
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
         if (
@@ -89,7 +92,6 @@ export default function MapScreen({ route }) {
           location.longitude >= area.sortLong[0] &&
           location.longitude <= area.sortLong[1]
           ) {
-          // console.log(area.id)
           const updatedArea = { ...area };
           updatedArea.fill = false;
           return updatedArea;
