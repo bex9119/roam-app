@@ -24,7 +24,7 @@ const createGrid = () => {
     }
   });
 
-  grid.forEach((latLong) => {
+  grid.forEach((latLong, index) => {
     tiles.push({
       location: [
         {
@@ -44,6 +44,7 @@ const createGrid = () => {
           longitude: latLong.longitude,
         },
       ],
+      id: index,
       fill: true,
       sortLat: [latLong.latitude, latLong.latitude + latitudeInterval],
       sortLong: [latLong.longitude, latLong.longitude + longitudeInterval],
