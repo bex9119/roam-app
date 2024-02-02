@@ -42,6 +42,7 @@ export default function SignUp({route}) {
           uid: getAuth().currentUser.uid,
           startLatitude: data.coords.latitude,
           startLongitude: data.coords.longitude,
+          userHistory: []
         };
         addDoc(myCollection, myDocumentData)
       })

@@ -25,6 +25,7 @@ export default function MapScreen() {
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [loadingModal, setLoadingModal] = useState(true);
   const [visible, setVisbile] = useState(false);
+  const [userHistory, setUserHistory] = useState([])
 
       const startLocationUpdates = () => {
         Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -87,6 +88,12 @@ export default function MapScreen() {
           location.longitude <= area.sortLong[1]
           ) {
           const updatedArea = { ...area };
+          if (area.fill === true) {
+            setUserHistory((currUserHistory) => {
+              return currUserHistory.push(area.id)
+            })
+          }
+          console.log(userHistory)
           updatedArea.fill = false;
           return updatedArea;
         } else {
