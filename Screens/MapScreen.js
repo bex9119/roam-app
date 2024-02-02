@@ -14,8 +14,10 @@ import {Modal as ModalPaper} from "react-native-paper";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function MapScreen({ route }) {
+  
+
   const [location, setLocation] = useState({});
-  const [region, setRegion] = useState(createGrid());
+  const [region, setRegion] = useState();
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
   const navigation = useNavigation();
   const [addButtonClicked, setAddButtonClicked] = useState(false);
@@ -24,7 +26,10 @@ export default function MapScreen({ route }) {
   const [loadingModal, setLoadingModal] = useState(true);
   const [visible, setVisbile] = useState(false);
   const { currentUser, setCurrentUser } = route.params;
-
+  createGrid().then((res) => {
+    setRegion(res)
+  })
+  
   function loadMaps() {
     return getDoc(doc(db, "Maps", "HJLCbJGvssb2onQTbiy4")).then((snapshot) => {
       return snapshot.data().mapLoad;
@@ -75,6 +80,7 @@ export default function MapScreen({ route }) {
   }, []);
 
   useEffect(() => {
+    if(region){
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
         if (
@@ -82,7 +88,8 @@ export default function MapScreen({ route }) {
           location.latitude >= area.sortLat[0] &&
           location.longitude >= area.sortLong[0] &&
           location.longitude <= area.sortLong[1]
-        ) {
+          ) {
+          // console.log(area.id)
           const updatedArea = { ...area };
           updatedArea.fill = false;
           return updatedArea;
@@ -91,7 +98,7 @@ export default function MapScreen({ route }) {
         }
       });
       return updatedRegion;
-    });
+    })};
   }, [location]);
 
   useEffect(() => {
@@ -134,6 +141,7 @@ export default function MapScreen({ route }) {
   const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
   delay(5000).then(() => setLoadingModal(false));
 
+  if(region){
   return (
     <View style={styles.container}>
       <View
@@ -165,7 +173,7 @@ export default function MapScreen({ route }) {
 
       <View style={styles.mapView}>
         <MapView
-          minZoomLevel={17}
+          minZoomLevel={10}
           style={{ flex: 1, height: "100%" }}
           region={{
             latitude: location.latitude,
@@ -256,7 +264,31 @@ export default function MapScreen({ route }) {
         </ModalPaper>
       </Portal>
     </View>
-  );
+    )
+  }
+  else { return (
+            <Modal
+              isVisible={loadingModal}
+              transparent={false}
+              style={styles.content}
+            >
+              <View>
+                <Image
+                  source={require("../assets/Landmark.png")}
+                  style={{
+                    height: 200,
+                    width: 100,
+                    padding: 75,
+                  }}
+                />
+                <ActivityIndicator size="large" style={{ padding: 30 }} />
+                <Text style={styles.text}>Explore your local area</Text>
+                <Text style={styles.text}>Discover new places</Text>
+                <Text style={styles.text}>Share your favourite spots</Text>
+              </View>
+    </Modal>
+  )
+  };
 }
 
 const styles = StyleSheet.create({
