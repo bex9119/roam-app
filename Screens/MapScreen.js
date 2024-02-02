@@ -90,10 +90,10 @@ export default function MapScreen() {
           const updatedArea = { ...area };
           if (area.fill === true) {
             setUserHistory((currUserHistory) => {
-              return currUserHistory.push(area.id)
+              currUserHistory.push(area.id)
+              return currUserHistory
             })
           }
-          console.log(userHistory)
           updatedArea.fill = false;
           return updatedArea;
         } else {
@@ -103,7 +103,7 @@ export default function MapScreen() {
       return updatedRegion;
     })};
   }, [location]);
-
+  
   useEffect(() => {
     const landmarkArray = [];
     getDocs(collection(db, "Landmarks"))
