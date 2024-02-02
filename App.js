@@ -31,11 +31,14 @@ export default function App() {
             name="LoginPage"
             component={LoginPage}
             options={{ headerShown: false }}
+            initialParams={{ currentUser, setCurrentUser }}
           />
           <Stack.Screen
             name="Sign-up"
             component={SignUp}
-            options={{ headerShown: false }}
+            options={{ headerShown: false }
+          }
+          initialParams={{ currentUser, setCurrentUser }}
           />
           <Stack.Screen
             name="MapScreen"

@@ -13,7 +13,7 @@ import { Button, Portal, TextInput } from "react-native-paper";
 import {Modal as ModalPaper} from "react-native-paper";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-export default function MapScreen({ route }) {
+export default function MapScreen() {
   
 
   const [location, setLocation] = useState({});
@@ -25,7 +25,7 @@ export default function MapScreen({ route }) {
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [loadingModal, setLoadingModal] = useState(true);
   const [visible, setVisbile] = useState(false);
-  const { currentUser, setCurrentUser } = route.params;
+
       const startLocationUpdates = () => {
         Location.requestForegroundPermissionsAsync().then(({ status }) => {
           if (status !== "granted") {
@@ -38,7 +38,6 @@ export default function MapScreen({ route }) {
                 latitude: movedLocation.coords.latitude,
                 longitude: movedLocation.coords.longitude,
               };
-              console.log(newCoordinates);
               setLocation(newCoordinates);
             }
           );
@@ -61,7 +60,6 @@ export default function MapScreen({ route }) {
   
   useEffect(() => {
     if(getAuth().currentUser){
-      setCurrentUser(getAuth().currentUser.displayName)
         createGrid().then((res) => {
           setRegion(res);
         }).then(() => {
@@ -80,7 +78,6 @@ export default function MapScreen({ route }) {
 
   useEffect(() => {
     if (region) {
-      console.log('found a region')
     setRegion((currRegion) => {
       const updatedRegion = currRegion.map((area) => {
         if (
@@ -89,7 +86,6 @@ export default function MapScreen({ route }) {
           location.longitude >= area.sortLong[0] &&
           location.longitude <= area.sortLong[1]
           ) {
-          console.log(area.id)
           const updatedArea = { ...area };
           updatedArea.fill = false;
           return updatedArea;

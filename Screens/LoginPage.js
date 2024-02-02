@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, View, Image } from "react-native";
 import { TextInput, Button, Title, Modal, Text, Portal } from "react-native-paper";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config";
 import { useNavigation } from "@react-navigation/native";
 
-export default function LoginPage() {
+export default function LoginPage({route}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [visible, setVisbile] = useState(false);
+  const { currentUser, setCurrentUser } = route.params;
   const navigation = useNavigation();
 
     function handleSubmit() {
@@ -18,9 +19,13 @@ export default function LoginPage() {
         .then(() => {
             setEmail("");
             setPassword("");
-            navigation.navigate('MapScreen')
+            setCurrentUser(getAuth().currentUser.displayName)
         })
-        .catch(() => {
+        .then(()=> {
+          navigation.navigate('MapScreen')
+        })
+        .catch((error) => {
+            console.log(error)
             showModal();
         });
     }
