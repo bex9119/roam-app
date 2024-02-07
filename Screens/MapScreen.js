@@ -3,10 +3,10 @@ import MapView, { Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
 import mapStyle from "../assets/mapStyle.json";
-import { addDoc, collection, doc, getDoc, getDocs, GeoPoint } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, GeoPoint, query, where, updateDoc } from "firebase/firestore";
 import { db } from "../config";
 import Modal from "react-native-modal";
-import { Text, View, StyleSheet, Image, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, Image, ActivityIndicator, AppState } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 const customPin = "../assets/re-sized-landmark-pin.png";
 import { Button, Portal, TextInput } from "react-native-paper";
@@ -26,6 +26,7 @@ export default function MapScreen() {
   const [loadingModal, setLoadingModal] = useState(true);
   const [visible, setVisbile] = useState(false);
   const [userHistory, setUserHistory] = useState([])
+  const [mapId, setMapId] = useState('')
 
       const startLocationUpdates = () => {
         Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -66,7 +67,33 @@ export default function MapScreen() {
         }).then(() => {
           startLocationUpdates()
         });}
+
+        const q = query(
+          collection(db, "maps"),
+          where("uid", "==", getAuth().currentUser.uid)
+        );
+        getDocs(q).then((snapshot)=> {
+          console.log(snapshot._snapshot.id)
+          snapshot.forEach((doc)=> {
+            setMapId(doc.id)
+            setUserHistory(doc.data().userHistory) 
+          })  
+        })
   }, [])
+
+  useEffect(() => {
+    console.log(AppState.currentState)
+    const appStateId = AppState.addEventListener('change');
+
+    return () => {
+      appStateId.remove(
+        updateDoc(doc(db, "maps", mapId), {userHistory: userHistory})
+        .then(()=> {
+          console.log("userHistory updated")
+        })
+      )
+    };
+ }, []);
 
   useEffect(() => {
     const auth = getAuth();
@@ -90,8 +117,10 @@ export default function MapScreen() {
           const updatedArea = { ...area };
           if (area.fill === true) {
             setUserHistory((currUserHistory) => {
-              currUserHistory.push(area.id)
-              return currUserHistory
+              if (!currUserHistory.includes(area.id)) {
+                currUserHistory.push(area.id)
+              } 
+                return currUserHistory
             })
           }
           updatedArea.fill = false;
