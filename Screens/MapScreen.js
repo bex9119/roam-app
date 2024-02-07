@@ -25,7 +25,7 @@ export default function MapScreen() {
   const [newLandmarkTitle, setNewLandmarkTitle] = useState("");
   const [loadingModal, setLoadingModal] = useState(true);
   const [visible, setVisbile] = useState(false);
-  const [userHistory, setUserHistory] = useState([])
+  const [userHistory, setUserHistory] = useState(['test'])
   const [mapId, setMapId] = useState('')
 
       const startLocationUpdates = () => {
@@ -72,25 +72,37 @@ export default function MapScreen() {
           collection(db, "maps"),
           where("uid", "==", getAuth().currentUser.uid)
         );
-        getDocs(q).then((snapshot)=> {
-          console.log(snapshot._snapshot.id)
-          snapshot.forEach((doc)=> {
-            setMapId(doc.id)
+    getDocs(q).then((snapshot) => {
+          console.log(snapshot.docs.keys(), 'snapshot docs')
+          snapshot.forEach((doc) => {
+            console.log(doc.id)
+            setMapId(doc.id);
             setUserHistory(doc.data().userHistory) 
           })  
         })
+        console.log(mapId, 'when set up')
   }, [])
 
   useEffect(() => {
-    console.log(AppState.currentState)
-    const appStateId = AppState.addEventListener('change');
+    console.log(AppState.currentState, 'current state')
+    const updateMapHistory = () => {
+      console.log('attempting to run firebase')
+      console.log(mapId)
+      updateDoc(doc(db, "maps", mapId), { userHistory: userHistory }).then(
+        () => {
+          console.log("userHistory updated");
+        }
+      );
+    }
+
+    const appStateId = AppState.addEventListener('change', updateMapHistory);
 
     return () => {
-      appStateId.remove(
-        updateDoc(doc(db, "maps", mapId), {userHistory: userHistory})
-        .then(()=> {
-          console.log("userHistory updated")
-        })
+      appStateId.remove(updateMapHistory()
+        // updateDoc(doc(db, "maps", mapId), {userHistory: userHistory})
+        // .then(()=> {
+        //   console.log("userHistory updated")
+        // })
       )
     };
  }, []);
