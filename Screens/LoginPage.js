@@ -5,12 +5,12 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config";
 import { useNavigation } from "@react-navigation/native";
 
-export default function LoginPage({route}) {
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [visible, setVisbile] = useState(false);
-  const { currentUser, setCurrentUser } = route.params;
+  // const { currentUser, setCurrentUser } = route.params;
   const navigation = useNavigation();
 
     function handleSubmit() {
@@ -19,7 +19,7 @@ export default function LoginPage({route}) {
         .then(() => {
             setEmail("");
             setPassword("");
-            setCurrentUser(getAuth().currentUser.displayName)
+            // setCurrentUser(getAuth().currentUser.displayName)
         })
         .then(()=> {
           navigation.navigate('MapScreen')

@@ -31,14 +31,14 @@ export default function App() {
             name="LoginPage"
             component={LoginPage}
             options={{ headerShown: false }}
-            initialParams={{ currentUser, setCurrentUser }}
+            // initialParams={{ currentUser, setCurrentUser }}
           />
           <Stack.Screen
             name="Sign-up"
             component={SignUp}
             options={{ headerShown: false }
           }
-          initialParams={{ currentUser, setCurrentUser }}
+          // initialParams={{ currentUser, setCurrentUser }}
           />
           <Stack.Screen
             name="MapScreen"
@@ -62,7 +62,7 @@ export default function App() {
               headerLeft: () => false,
             }}
             navigationOptions={{ gesturesEnabled: false }}
-            initialParams={{ currentUser, setCurrentUser }}
+            // initialParams={{ currentUser, setCurrentUser }}
           />
           <Stack.Screen
             name="Landmarks"

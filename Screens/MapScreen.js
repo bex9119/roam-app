@@ -17,7 +17,7 @@ export default function MapScreen() {
   
 
   const [location, setLocation] = useState({});
-  const [region, setRegion] = useState();
+  const [region, setRegion] = useState([]);
   const [finalLandmarkArray, setFinalLandmarkArray] = useState([]);
   const navigation = useNavigation();
   const [addButtonClicked, setAddButtonClicked] = useState(false);
@@ -61,12 +61,7 @@ export default function MapScreen() {
   }
   
   useEffect(() => {
-    if(getAuth().currentUser){
-        createGrid().then((res) => {
-          setRegion(res);
-        }).then(() => {
-          startLocationUpdates()
-        });}
+    
 
         const q = query(
           collection(db, "maps"),
@@ -74,40 +69,23 @@ export default function MapScreen() {
         );
     getDocs(q).then((snapshot) => {
           snapshot.forEach((doc) => {
-            console.log(doc.id)
             mapId.current = doc.id
             setUserHistory(doc.data().userHistory) 
           })  
         })
         .then(()=> {
-          console.log(mapId.current, 'when set up')
+          if (getAuth().currentUser) {
+            createGrid()
+              .then((res) => {
+                setRegion(res);
+              })
+              .then(() => {
+                startLocationUpdates();
+              });
+          }
         })
+    
   }, [])
-
-  const updateMapHistory = () => {
-    console.log('attempting to run firebase')
-    console.log(mapId.current)
-    updateDoc(doc(db, "maps", mapId.current), { userHistory: userHistory }).then(
-      () => {
-        console.log("userHistory updated");
-      }
-    );
-  }
-
-AppState.addEventListener('change', updateMapHistory);
-
-//   useEffect(() => {
-//     console.log(AppState.currentState, 'current state')
-
-//     return () => {
-//       appStateId.remove(updateMapHistory()
-//         updateDoc(doc(db, "maps", mapId), {userHistory: userHistory})
-//         .then(()=> {
-//           console.log("userHistory updated")
-//         })
-//       )
-//     };
-//  }, []);
 
   useEffect(() => {
     const auth = getAuth();
@@ -136,11 +114,7 @@ AppState.addEventListener('change', updateMapHistory);
               } 
                 return currUserHistory
             })
-            updateDoc(doc(db, "maps", mapId.current), { userHistory: userHistory }).then(
-              () => {
-                console.log("userHistory updated");
-              }
-              ); 
+            updateDoc(doc(db, "maps", mapId.current), { userHistory: userHistory })
             }
           updatedArea.fill = false;
           return updatedArea;
@@ -237,7 +211,7 @@ AppState.addEventListener('change', updateMapHistory);
           customMapStyle={mapStyle}
           showsUserLocation={true}
         >
-          {region.map((tile, index) => {
+          {region.filter((tile) => { return !userHistory.includes(tile.id)}).map((tile, index) => {
             return (
               <Polygon
                 key={`tile${index}`}

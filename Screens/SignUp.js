@@ -7,12 +7,12 @@ import * as Location from "expo-location";
 import { addDoc, collection } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 
-export default function SignUp({route}) {
+export default function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const { currentUser, setCurrentUser } = route.params;
+  // const { currentUser, setCurrentUser } = route.params;
   const navigation = useNavigation();
 
   function handleSubmit() {
@@ -24,7 +24,7 @@ export default function SignUp({route}) {
               return auth;    
       })
       .then((user) => {
-        updateProfile(user.currentUser, { displayName: username })
+        // updateProfile(user.currentUser, { displayName: username })
         setCurrentUser(username)
       })
       .then(()=> {
