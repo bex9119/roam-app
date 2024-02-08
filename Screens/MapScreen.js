@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MapView, { Polygon, Marker } from "../setup/map";
 import * as Location from "expo-location";
 import createGrid from "../utils/createGrid";
@@ -26,7 +26,7 @@ export default function MapScreen() {
   const [loadingModal, setLoadingModal] = useState(true);
   const [visible, setVisbile] = useState(false);
   const [userHistory, setUserHistory] = useState(['test'])
-  const [mapId, setMapId] = useState('')
+  const mapId = useRef('')
 
       const startLocationUpdates = () => {
         Location.requestForegroundPermissionsAsync().then(({ status }) => {
@@ -73,39 +73,41 @@ export default function MapScreen() {
           where("uid", "==", getAuth().currentUser.uid)
         );
     getDocs(q).then((snapshot) => {
-          console.log(snapshot.docs.keys(), 'snapshot docs')
           snapshot.forEach((doc) => {
             console.log(doc.id)
-            setMapId(doc.id);
+            mapId.current = doc.id
             setUserHistory(doc.data().userHistory) 
           })  
         })
-        console.log(mapId, 'when set up')
+        .then(()=> {
+          console.log(mapId.current, 'when set up')
+        })
   }, [])
 
-  useEffect(() => {
-    console.log(AppState.currentState, 'current state')
-    const updateMapHistory = () => {
-      console.log('attempting to run firebase')
-      console.log(mapId)
-      updateDoc(doc(db, "maps", mapId), { userHistory: userHistory }).then(
-        () => {
-          console.log("userHistory updated");
-        }
-      );
-    }
+  const updateMapHistory = () => {
+    console.log('attempting to run firebase')
+    console.log(mapId.current)
+    updateDoc(doc(db, "maps", mapId.current), { userHistory: userHistory }).then(
+      () => {
+        console.log("userHistory updated");
+      }
+    );
+  }
 
-    const appStateId = AppState.addEventListener('change', updateMapHistory);
+AppState.addEventListener('change', updateMapHistory);
 
-    return () => {
-      appStateId.remove(updateMapHistory()
-        // updateDoc(doc(db, "maps", mapId), {userHistory: userHistory})
-        // .then(()=> {
-        //   console.log("userHistory updated")
-        // })
-      )
-    };
- }, []);
+//   useEffect(() => {
+//     console.log(AppState.currentState, 'current state')
+
+//     return () => {
+//       appStateId.remove(updateMapHistory()
+//         updateDoc(doc(db, "maps", mapId), {userHistory: userHistory})
+//         .then(()=> {
+//           console.log("userHistory updated")
+//         })
+//       )
+//     };
+//  }, []);
 
   useEffect(() => {
     const auth = getAuth();
@@ -134,7 +136,12 @@ export default function MapScreen() {
               } 
                 return currUserHistory
             })
-          }
+            updateDoc(doc(db, "maps", mapId.current), { userHistory: userHistory }).then(
+              () => {
+                console.log("userHistory updated");
+              }
+              ); 
+            }
           updatedArea.fill = false;
           return updatedArea;
         } else {
