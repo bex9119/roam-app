@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {StyleSheet, View, Image} from "react-native";
-import { TextInput, Button, Title } from 'react-native-paper';
+import { TextInput, Button, Title, Portal, Modal, Text } from 'react-native-paper';
 import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth";
 import { auth, db } from "../config";
 import * as Location from "expo-location";
@@ -12,6 +12,9 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [error, setError] = useState("")
+  const [visible, setVisbile] = useState(false);
+
   // const { currentUser, setCurrentUser } = route.params;
   const navigation = useNavigation();
 
@@ -50,8 +53,25 @@ export default function SignUp() {
         navigation.navigate('MapScreen')
       })
       .catch((error)=> {
-        console.log(error)
+        if (error.code === "auth/email-already-in-use") {
+          setError("Email already in use")
+        }
+        if (error.code === "auth/invalid-email") {
+          setError("Invalid email")
+        }
+        if (error.code === "auth/weak-password") {
+          setError("Password must be at least 6 characters")
+        }
+        showModal()
       })
+  }
+
+  function showModal() {
+    setVisbile(true);
+  }
+
+  function hideModal() {
+    setVisbile(false);
   }
 
   return (
@@ -104,6 +124,16 @@ export default function SignUp() {
           Sign Up
         </Button>
       </View>
+
+      <Portal>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={styles.modalStyle}
+        >
+          <Text>{error}</Text>
+        </Modal>
+      </Portal>
     </>
   );
 }
@@ -123,6 +153,10 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 16,
     backgroundColor: "#42618d",
+  },
+  modalStyle: {
+    backgroundColor: "white",
+    padding: 20,
   },
   text : {
     color: "white"
