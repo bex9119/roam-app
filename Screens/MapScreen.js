@@ -164,7 +164,7 @@ export default function MapScreen() {
       });
   }
   const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
-  delay(5000).then(() => setLoadingModal(false));
+  delay(6000).then(() => setLoadingModal(false));
 
   if(region){
   return (
@@ -198,7 +198,7 @@ export default function MapScreen() {
 
       <View style={styles.mapView}>
         <MapView
-          minZoomLevel={10}
+          minZoomLevel={15}
           style={{ flex: 1, height: "100%" }}
           region={{
             latitude: location.latitude,
